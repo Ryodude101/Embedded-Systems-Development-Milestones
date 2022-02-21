@@ -1,0 +1,26 @@
+Another extremely useful programmer's tool when dealing
+with "evolving" code is a "diff" utility. The original
+diff utility is a command-line tool that generates a
+"diff patch".  That is useful in some situations and
+I encourage to be familiar with reading the diff patch
+output a bit.
+
+For development purposes, I find the graphical diff
+tools much more helpful.  Many exist and your linux
+or MacOS may already have one.  Others can be installed
+and many are supported on multiple platforms.
+
+Over the years, I have used (and found useful):
+meld (my current favorite), Kompare, Diffuse, and
+xxdiff.
+
+On the Windows platform, there are several to choose from,
+including meld.  Search for "Windows graphical diff tool"
+to find some suggestions.
+
+You can link your favority diff tool into your revision
+control client like "git".  This handy to resolve conflicts
+which will result when we start collaborative team-based
+code development.
+
+

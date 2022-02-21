@@ -1,0 +1,340 @@
+ARM GAS  m1b.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"m1b.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.delay_loop,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	delay_loop:
+  26              	.LVL0:
+  27              	.LFB4:
+  28              		.file 1 "src/m1b.c"
+   1:src/m1b.c     **** #ifndef STM32L4
+   2:src/m1b.c     ****    #define STM32L4
+   3:src/m1b.c     **** #endif
+   4:src/m1b.c     **** 
+   5:src/m1b.c     **** #include "user_app.h"
+   6:src/m1b.c     **** 
+   7:src/m1b.c     **** #include <errno.h>
+   8:src/m1b.c     **** #include <stdio.h>
+   9:src/m1b.c     **** #include <unistd.h>
+  10:src/m1b.c     **** #include <libopencm3/stm32/rcc.h>
+  11:src/m1b.c     **** #include <libopencm3/stm32/gpio.h>
+  12:src/m1b.c     **** #include <libopencm3/cm3/nvic.h>
+  13:src/m1b.c     **** #include <libopencm3/stm32/exti.h>
+  14:src/m1b.c     **** #include <libopencm3/stm32/flash.h>
+  15:src/m1b.c     **** 
+  16:src/m1b.c     **** #include <libopencm3/stm32/timer.h>
+  17:src/m1b.c     **** static void clock_setup(void)
+  18:src/m1b.c     **** {
+  19:src/m1b.c     **** 	// USE THE HSI16
+  20:src/m1b.c     **** 	rcc_osc_on(RCC_HSI16); //Inferred by looking at rcc.c source code
+  21:src/m1b.c     **** 	
+  22:src/m1b.c     **** 	flash_prefetch_enable();
+  23:src/m1b.c     **** 	flash_set_ws(4);
+  24:src/m1b.c     **** 	flash_dcache_enable();
+  25:src/m1b.c     **** 	flash_icache_enable();
+  26:src/m1b.c     **** 	/* setup for 80MHz main pll  */
+  27:src/m1b.c     **** 	rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 4, 40, 0, 0, RCC_PLLCFGR_PLLR_DIV2); //Retrieved from l
+  28:src/m1b.c     **** 	rcc_osc_on(RCC_PLL);
+  29:src/m1b.c     **** 	/* either rcc_wait_for_osc_ready() or do other things */
+  30:src/m1b.c     **** 
+ARM GAS  m1b.s 			page 2
+
+
+  31:src/m1b.c     **** 	/* Enable clocks for the ports we need */
+  32:src/m1b.c     **** 	rcc_periph_clock_enable(RCC_GPIOA);
+  33:src/m1b.c     ****    
+  34:src/m1b.c     **** 	rcc_set_sysclk_source(RCC_CFGR_SW_PLL); /* careful with the param here! */
+  35:src/m1b.c     **** 	rcc_wait_for_sysclk_status(RCC_PLL);
+  36:src/m1b.c     **** 	
+  37:src/m1b.c     **** 	// These three global variables must be set to contain
+  38:src/m1b.c     **** 	// the respective frequencies of the ARM-Cortex busses.
+  39:src/m1b.c     **** 	// The libOpenCM3 library uses these variables in a variety
+  40:src/m1b.c     **** 	// of places to calculate register values to control chip
+  41:src/m1b.c     **** 	// timing.  If you do not set these variables correctly,
+  42:src/m1b.c     **** 	// you will see weird behavior, erroneous behavior, or failures.
+  43:src/m1b.c     **** 	//
+  44:src/m1b.c     **** 	// MAGIC NUMBERS ARE EVIL!!!
+  45:src/m1b.c     **** 	rcc_ahb_frequency = 80e6;
+  46:src/m1b.c     **** 	rcc_apb1_frequency = 80e6;
+  47:src/m1b.c     **** 	rcc_apb2_frequency = 80e6;
+  48:src/m1b.c     **** } 
+  49:src/m1b.c     ****  
+  50:src/m1b.c     **** static void delay_loop(int32_t loops)
+  51:src/m1b.c     **** {
+  29              		.loc 1 51 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  52:src/m1b.c     ****     while(loops > 0)
+  34              		.loc 1 52 5 view .LVU1
+  35              		.loc 1 52 10 is_stmt 0 view .LVU2
+  36 0000 01E0     		b	.L2
+  37              	.L3:
+  53:src/m1b.c     ****     {
+  54:src/m1b.c     ****        asm("nop");
+  38              		.loc 1 54 8 is_stmt 1 view .LVU3
+  39              		.syntax unified
+  40              	@ 54 "src/m1b.c" 1
+  41 0002 00BF     		nop
+  42              	@ 0 "" 2
+  55:src/m1b.c     ****        loops--;
+  43              		.loc 1 55 8 view .LVU4
+  44              		.loc 1 55 13 is_stmt 0 view .LVU5
+  45              		.thumb
+  46              		.syntax unified
+  47 0004 0138     		subs	r0, r0, #1
+  48              	.LVL1:
+  49              	.L2:
+  52:src/m1b.c     ****     while(loops > 0)
+  50              		.loc 1 52 10 is_stmt 1 view .LVU6
+  51 0006 0028     		cmp	r0, #0
+  52 0008 FBDC     		bgt	.L3
+  56:src/m1b.c     ****     }
+  57:src/m1b.c     **** }
+  53              		.loc 1 57 1 is_stmt 0 view .LVU7
+  54 000a 7047     		bx	lr
+  55              		.cfi_endproc
+  56              	.LFE4:
+  58              		.section	.text.clock_setup,"ax",%progbits
+ARM GAS  m1b.s 			page 3
+
+
+  59              		.align	1
+  60              		.syntax unified
+  61              		.thumb
+  62              		.thumb_func
+  64              	clock_setup:
+  65              	.LFB3:
+  18:src/m1b.c     **** 	// USE THE HSI16
+  66              		.loc 1 18 1 is_stmt 1 view -0
+  67              		.cfi_startproc
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70 0000 10B5     		push	{r4, lr}
+  71              	.LCFI0:
+  72              		.cfi_def_cfa_offset 8
+  73              		.cfi_offset 4, -8
+  74              		.cfi_offset 14, -4
+  75 0002 82B0     		sub	sp, sp, #8
+  76              	.LCFI1:
+  77              		.cfi_def_cfa_offset 16
+  20:src/m1b.c     **** 	
+  78              		.loc 1 20 2 view .LVU9
+  79 0004 0220     		movs	r0, #2
+  80 0006 FFF7FEFF 		bl	rcc_osc_on
+  81              	.LVL2:
+  22:src/m1b.c     **** 	flash_set_ws(4);
+  82              		.loc 1 22 2 view .LVU10
+  83 000a FFF7FEFF 		bl	flash_prefetch_enable
+  84              	.LVL3:
+  23:src/m1b.c     **** 	flash_dcache_enable();
+  85              		.loc 1 23 2 view .LVU11
+  86 000e 0420     		movs	r0, #4
+  87 0010 FFF7FEFF 		bl	flash_set_ws
+  88              	.LVL4:
+  24:src/m1b.c     **** 	flash_icache_enable();
+  89              		.loc 1 24 2 view .LVU12
+  90 0014 FFF7FEFF 		bl	flash_dcache_enable
+  91              	.LVL5:
+  25:src/m1b.c     **** 	/* setup for 80MHz main pll  */
+  92              		.loc 1 25 2 view .LVU13
+  93 0018 FFF7FEFF 		bl	flash_icache_enable
+  94              	.LVL6:
+  27:src/m1b.c     **** 	rcc_osc_on(RCC_PLL);
+  95              		.loc 1 27 2 view .LVU14
+  96 001c 0024     		movs	r4, #0
+  97 001e 0194     		str	r4, [sp, #4]
+  98 0020 0094     		str	r4, [sp]
+  99 0022 2346     		mov	r3, r4
+ 100 0024 2822     		movs	r2, #40
+ 101 0026 0421     		movs	r1, #4
+ 102 0028 0220     		movs	r0, #2
+ 103 002a FFF7FEFF 		bl	rcc_set_main_pll
+ 104              	.LVL7:
+  28:src/m1b.c     **** 	/* either rcc_wait_for_osc_ready() or do other things */
+ 105              		.loc 1 28 2 view .LVU15
+ 106 002e 2046     		mov	r0, r4
+ 107 0030 FFF7FEFF 		bl	rcc_osc_on
+ 108              	.LVL8:
+ARM GAS  m1b.s 			page 4
+
+
+  32:src/m1b.c     ****    
+ 109              		.loc 1 32 2 view .LVU16
+ 110 0034 4FF41860 		mov	r0, #2432
+ 111 0038 FFF7FEFF 		bl	rcc_periph_clock_enable
+ 112              	.LVL9:
+  34:src/m1b.c     **** 	rcc_wait_for_sysclk_status(RCC_PLL);
+ 113              		.loc 1 34 2 view .LVU17
+ 114 003c 0320     		movs	r0, #3
+ 115 003e FFF7FEFF 		bl	rcc_set_sysclk_source
+ 116              	.LVL10:
+  35:src/m1b.c     **** 	
+ 117              		.loc 1 35 2 view .LVU18
+ 118 0042 2046     		mov	r0, r4
+ 119 0044 FFF7FEFF 		bl	rcc_wait_for_sysclk_status
+ 120              	.LVL11:
+  45:src/m1b.c     **** 	rcc_apb1_frequency = 80e6;
+ 121              		.loc 1 45 2 view .LVU19
+  45:src/m1b.c     **** 	rcc_apb1_frequency = 80e6;
+ 122              		.loc 1 45 20 is_stmt 0 view .LVU20
+ 123 0048 044B     		ldr	r3, .L6
+ 124 004a 054A     		ldr	r2, .L6+4
+ 125 004c 1360     		str	r3, [r2]
+  46:src/m1b.c     **** 	rcc_apb2_frequency = 80e6;
+ 126              		.loc 1 46 2 is_stmt 1 view .LVU21
+  46:src/m1b.c     **** 	rcc_apb2_frequency = 80e6;
+ 127              		.loc 1 46 21 is_stmt 0 view .LVU22
+ 128 004e 054A     		ldr	r2, .L6+8
+ 129 0050 1360     		str	r3, [r2]
+  47:src/m1b.c     **** } 
+ 130              		.loc 1 47 2 is_stmt 1 view .LVU23
+  47:src/m1b.c     **** } 
+ 131              		.loc 1 47 21 is_stmt 0 view .LVU24
+ 132 0052 054A     		ldr	r2, .L6+12
+ 133 0054 1360     		str	r3, [r2]
+  48:src/m1b.c     ****  
+ 134              		.loc 1 48 1 view .LVU25
+ 135 0056 02B0     		add	sp, sp, #8
+ 136              	.LCFI2:
+ 137              		.cfi_def_cfa_offset 8
+ 138              		@ sp needed
+ 139 0058 10BD     		pop	{r4, pc}
+ 140              	.L7:
+ 141 005a 00BF     		.align	2
+ 142              	.L6:
+ 143 005c 00B4C404 		.word	80000000
+ 144 0060 00000000 		.word	rcc_ahb_frequency
+ 145 0064 00000000 		.word	rcc_apb1_frequency
+ 146 0068 00000000 		.word	rcc_apb2_frequency
+ 147              		.cfi_endproc
+ 148              	.LFE3:
+ 150              		.section	.text.main,"ax",%progbits
+ 151              		.align	1
+ 152              		.global	main
+ 153              		.syntax unified
+ 154              		.thumb
+ 155              		.thumb_func
+ 157              	main:
+ARM GAS  m1b.s 			page 5
+
+
+ 158              	.LFB5:
+  58:src/m1b.c     ****  
+  59:src/m1b.c     **** int main(void)
+  60:src/m1b.c     **** {
+ 159              		.loc 1 60 1 is_stmt 1 view -0
+ 160              		.cfi_startproc
+ 161              		@ Volatile: function does not return.
+ 162              		@ args = 0, pretend = 0, frame = 0
+ 163              		@ frame_needed = 0, uses_anonymous_args = 0
+ 164 0000 08B5     		push	{r3, lr}
+ 165              	.LCFI3:
+ 166              		.cfi_def_cfa_offset 8
+ 167              		.cfi_offset 3, -8
+ 168              		.cfi_offset 14, -4
+  61:src/m1b.c     **** 	clock_setup();
+ 169              		.loc 1 61 2 view .LVU27
+ 170 0002 FFF7FEFF 		bl	clock_setup
+ 171              	.LVL12:
+  62:src/m1b.c     ****     rcc_periph_clock_enable(RCC_GPIOA);
+ 172              		.loc 1 62 5 view .LVU28
+ 173 0006 4FF41860 		mov	r0, #2432
+ 174 000a FFF7FEFF 		bl	rcc_periph_clock_enable
+ 175              	.LVL13:
+  63:src/m1b.c     ****     gpio_mode_setup(LED2_GPIO_Port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, LED2_Pin);
+ 176              		.loc 1 63 5 view .LVU29
+ 177 000e 2023     		movs	r3, #32
+ 178 0010 0122     		movs	r2, #1
+ 179 0012 1146     		mov	r1, r2
+ 180 0014 4FF09040 		mov	r0, #1207959552
+ 181 0018 FFF7FEFF 		bl	gpio_mode_setup
+ 182              	.LVL14:
+ 183              	.L9:
+  64:src/m1b.c     ****     while(1)
+ 184              		.loc 1 64 5 discriminator 1 view .LVU30
+  65:src/m1b.c     ****     {
+  66:src/m1b.c     ****        gpio_toggle(LED2_GPIO_Port, LED2_Pin);
+ 185              		.loc 1 66 8 discriminator 1 view .LVU31
+ 186 001c 2021     		movs	r1, #32
+ 187 001e 4FF09040 		mov	r0, #1207959552
+ 188 0022 FFF7FEFF 		bl	gpio_toggle
+ 189              	.LVL15:
+  67:src/m1b.c     ****        delay_loop(400000);
+ 190              		.loc 1 67 8 discriminator 1 view .LVU32
+ 191 0026 0248     		ldr	r0, .L11
+ 192 0028 FFF7FEFF 		bl	delay_loop
+ 193              	.LVL16:
+  64:src/m1b.c     ****     while(1)
+ 194              		.loc 1 64 10 discriminator 1 view .LVU33
+ 195 002c F6E7     		b	.L9
+ 196              	.L12:
+ 197 002e 00BF     		.align	2
+ 198              	.L11:
+ 199 0030 801A0600 		.word	400000
+ 200              		.cfi_endproc
+ 201              	.LFE5:
+ 203              		.text
+ 204              	.Letext0:
+ARM GAS  m1b.s 			page 6
+
+
+ 205              		.file 2 "/home/lubuntu/Documents/ARMToolchain/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include
+ 206              		.file 3 "/home/lubuntu/Documents/ARMToolchain/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include
+ 207              		.file 4 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/l4/rcc.h"
+ 208              		.file 5 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/rcc_common_
+ 209              		.file 6 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/gpio_common
+ 210              		.file 7 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/gpio_common
+ 211              		.file 8 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/flash_commo
+ 212              		.file 9 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/flash_commo
+ARM GAS  m1b.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 m1b.c
+               m1b.s:20     .text.delay_loop:0000000000000000 $t
+               m1b.s:25     .text.delay_loop:0000000000000000 delay_loop
+               m1b.s:59     .text.clock_setup:0000000000000000 $t
+               m1b.s:64     .text.clock_setup:0000000000000000 clock_setup
+               m1b.s:143    .text.clock_setup:000000000000005c $d
+               m1b.s:151    .text.main:0000000000000000 $t
+               m1b.s:157    .text.main:0000000000000000 main
+               m1b.s:199    .text.main:0000000000000030 $d
+
+UNDEFINED SYMBOLS
+rcc_osc_on
+flash_prefetch_enable
+flash_set_ws
+flash_dcache_enable
+flash_icache_enable
+rcc_set_main_pll
+rcc_periph_clock_enable
+rcc_set_sysclk_source
+rcc_wait_for_sysclk_status
+rcc_ahb_frequency
+rcc_apb1_frequency
+rcc_apb2_frequency
+gpio_mode_setup
+gpio_toggle

@@ -1,0 +1,261 @@
+ARM GAS  m1a.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"m1a.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.delay_loop,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	delay_loop:
+  26              	.LVL0:
+  27              	.LFB3:
+  28              		.file 1 "src/m1a.c"
+   1:src/m1a.c     **** /*
+   2:src/m1a.c     **** 
+   3:src/m1a.c     **** What is the period of the blinking light?
+   4:src/m1a.c     **** 
+   5:src/m1a.c     **** 800.005 ms
+   6:src/m1a.c     **** 
+   7:src/m1a.c     **** How I calculated:
+   8:src/m1a.c     **** If we look into the assembly code, we can count the clock cycles it takes to complete a single loop
+   9:src/m1a.c     **** so it is assumed each instruction takes 1 clock cycle. We can get the list of instructions from the
+  10:src/m1a.c     **** 
+  11:src/m1a.c     **** It looks like delay loop decompiles to...
+  12:src/m1a.c     **** 
+  13:src/m1a.c     **** """"
+  14:src/m1a.c     **** delayLoop:
+  15:src/m1a.c     ****    b .L2
+  16:src/m1a.c     **** .L3:   
+  17:src/m1a.c     ****    nop
+  18:src/m1a.c     ****    subs loops,loops,1
+  19:src/m1a.c     **** .L2:
+  20:src/m1a.c     ****    cmp loops, 0
+  21:src/m1a.c     ****    bgt .L3
+  22:src/m1a.c     ****    bx returnAddress
+  23:src/m1a.c     **** """"
+  24:src/m1a.c     **** 
+  25:src/m1a.c     **** counting instruction cycles:
+  26:src/m1a.c     ****    for the case where loops <= 0: 4
+  27:src/m1a.c     ****    for the case where loops > 0: 3 + 4 * (loops) + 1 = 4 + 4 * loops
+  28:src/m1a.c     **** 
+  29:src/m1a.c     **** we have now derived a formula for calculating the number of clock cycles it takes for delayLoop to 
+  30:src/m1a.c     **** instructions run in the main loop. 
+ARM GAS  m1a.s 			page 2
+
+
+  31:src/m1a.c     **** 
+  32:src/m1a.c     **** It looks like the while(1) loop decompiles to...
+  33:src/m1a.c     **** 
+  34:src/m1a.c     **** """"
+  35:src/m1a.c     **** .L5:
+  36:src/m1a.c     ****    movs (pin number)
+  37:src/m1a.c     ****    mov  (port base address)
+  38:src/m1a.c     ****    bl gpio_toggle
+  39:src/m1a.c     ****    ldr (port base address), .L7
+  40:src/m1a.c     ****    bl delayLoop
+  41:src/m1a.c     ****    b .L5
+  42:src/m1a.c     **** .L7:
+  43:src/m1a.c     **** """"
+  44:src/m1a.c     **** 
+  45:src/m1a.c     **** counting instruction cycles: 1 + 1 + 1 [actually unknown] + 1 + (1 + numOfDelayLoopInstructions) + 
+  46:src/m1a.c     **** 
+  47:src/m1a.c     **** We now have a (mostly complete equation) for the number of cycles for each loop to occur before the
+  48:src/m1a.c     **** 
+  49:src/m1a.c     **** Since 2 loops occur for a full period of a blink then we multiply by 2: N = 20 + 8 * loops
+  50:src/m1a.c     **** 
+  51:src/m1a.c     **** In this case, loops is 400e3, plugging into our equation results in 3,200,020 cycles
+  52:src/m1a.c     **** 
+  53:src/m1a.c     **** But now in order to convert cycles to time we need to figure out the speed of the system clock. Ref
+  54:src/m1a.c     **** system reset the 4 MHz MSI Oscillator is selected as the system clock by default. Given the frequen
+  55:src/m1a.c     **** and thus the period of the LED's blink:
+  56:src/m1a.c     **** 
+  57:src/m1a.c     **** divide the number of cycles by the frequency of the clock to get the period: 3200020 / 4000000 = 80
+  58:src/m1a.c     **** 
+  59:src/m1a.c     **** which if we time the LED using a stopwatch we can see is pretty accurate
+  60:src/m1a.c     **** 
+  61:src/m1a.c     **** 
+  62:src/m1a.c     **** 
+  63:src/m1a.c     **** The skeleton code didn't do much to configure the MCU main system clock. What is the frequency of t
+  64:src/m1a.c     **** verify that?
+  65:src/m1a.c     **** 
+  66:src/m1a.c     **** The clock frequency is 4 MHz. If we look at the datasheet it tells us that: on a system reset, if t
+  67:src/m1a.c     **** system clock. To verify, one could write a program where they blink an LED for the duration of a se
+  68:src/m1a.c     **** 
+  69:src/m1a.c     **** 
+  70:src/m1a.c     **** 
+  71:src/m1a.c     **** Explain how by observing m1a.lst the exact period of the blink could be found without even having t
+  72:src/m1a.c     **** 
+  73:src/m1a.c     **** See my explanation on how to solve the first problem.
+  74:src/m1a.c     **** 
+  75:src/m1a.c     **** 
+  76:src/m1a.c     **** 
+  77:src/m1a.c     **** Explain how to change the value in delay loop to get an led blink period of exactly 1/7 second? Mak
+  78:src/m1a.c     **** 
+  79:src/m1a.c     **** 71427
+  80:src/m1a.c     **** 
+  81:src/m1a.c     **** How I calculated:
+  82:src/m1a.c     **** Take my formulas that I derived from problem 1.    N = 10 + 4 * loops      period = N / sysFreq
+  83:src/m1a.c     **** 
+  84:src/m1a.c     **** Solve period for N and plug in original equation:     period * sysFreq = 10 + 4 * loops
+  85:src/m1a.c     **** 
+  86:src/m1a.c     **** Solve for loops:     loops = (period*sysFreq - 10) / 4
+  87:src/m1a.c     **** 
+ARM GAS  m1a.s 			page 3
+
+
+  88:src/m1a.c     **** Calculate:     loops = ceil(  (1/7) * 4e6 - 20] / 8   ) = 71427     *We take ceil() to make sure th
+  89:src/m1a.c     **** 
+  90:src/m1a.c     **** */
+  91:src/m1a.c     **** #ifndef STM32L4
+  92:src/m1a.c     ****    #define STM32L4
+  93:src/m1a.c     **** #endif
+  94:src/m1a.c     **** 
+  95:src/m1a.c     **** #include <errno.h>
+  96:src/m1a.c     **** #include <stdio.h>
+  97:src/m1a.c     **** #include <unistd.h>
+  98:src/m1a.c     **** #include <libopencm3/stm32/rcc.h>
+  99:src/m1a.c     **** #include <libopencm3/stm32/gpio.h>
+ 100:src/m1a.c     **** #include "user_app.h"
+ 101:src/m1a.c     ****  
+ 102:src/m1a.c     **** static void delay_loop(int32_t loops)
+ 103:src/m1a.c     **** {
+  29              		.loc 1 103 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+ 104:src/m1a.c     ****     while(loops > 0)
+  34              		.loc 1 104 5 view .LVU1
+  35              		.loc 1 104 10 is_stmt 0 view .LVU2
+  36 0000 01E0     		b	.L2
+  37              	.L3:
+ 105:src/m1a.c     ****     {
+ 106:src/m1a.c     ****        asm("nop");
+  38              		.loc 1 106 8 is_stmt 1 view .LVU3
+  39              		.syntax unified
+  40              	@ 106 "src/m1a.c" 1
+  41 0002 00BF     		nop
+  42              	@ 0 "" 2
+ 107:src/m1a.c     ****        loops--;
+  43              		.loc 1 107 8 view .LVU4
+  44              		.loc 1 107 13 is_stmt 0 view .LVU5
+  45              		.thumb
+  46              		.syntax unified
+  47 0004 0138     		subs	r0, r0, #1
+  48              	.LVL1:
+  49              	.L2:
+ 104:src/m1a.c     ****     while(loops > 0)
+  50              		.loc 1 104 10 is_stmt 1 view .LVU6
+  51 0006 0028     		cmp	r0, #0
+  52 0008 FBDC     		bgt	.L3
+ 108:src/m1a.c     ****     }
+ 109:src/m1a.c     **** }
+  53              		.loc 1 109 1 is_stmt 0 view .LVU7
+  54 000a 7047     		bx	lr
+  55              		.cfi_endproc
+  56              	.LFE3:
+  58              		.section	.text.main,"ax",%progbits
+  59              		.align	1
+  60              		.global	main
+  61              		.syntax unified
+  62              		.thumb
+  63              		.thumb_func
+ARM GAS  m1a.s 			page 4
+
+
+  65              	main:
+  66              	.LFB4:
+ 110:src/m1a.c     ****  
+ 111:src/m1a.c     **** int main(void)
+ 112:src/m1a.c     **** {
+  67              		.loc 1 112 1 is_stmt 1 view -0
+  68              		.cfi_startproc
+  69              		@ Volatile: function does not return.
+  70              		@ args = 0, pretend = 0, frame = 0
+  71              		@ frame_needed = 0, uses_anonymous_args = 0
+  72 0000 08B5     		push	{r3, lr}
+  73              	.LCFI0:
+  74              		.cfi_def_cfa_offset 8
+  75              		.cfi_offset 3, -8
+  76              		.cfi_offset 14, -4
+ 113:src/m1a.c     ****     rcc_periph_clock_enable(RCC_GPIOA);
+  77              		.loc 1 113 5 view .LVU9
+  78 0002 4FF41860 		mov	r0, #2432
+  79 0006 FFF7FEFF 		bl	rcc_periph_clock_enable
+  80              	.LVL2:
+ 114:src/m1a.c     ****     gpio_mode_setup(LED2_GPIO_Port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, LED2_Pin);
+  81              		.loc 1 114 5 view .LVU10
+  82 000a 2023     		movs	r3, #32
+  83 000c 0122     		movs	r2, #1
+  84 000e 1146     		mov	r1, r2
+  85 0010 4FF09040 		mov	r0, #1207959552
+  86 0014 FFF7FEFF 		bl	gpio_mode_setup
+  87              	.LVL3:
+  88              	.L5:
+ 115:src/m1a.c     ****     while(1)
+  89              		.loc 1 115 5 discriminator 1 view .LVU11
+ 116:src/m1a.c     ****     {
+ 117:src/m1a.c     ****        gpio_toggle(LED2_GPIO_Port, LED2_Pin);
+  90              		.loc 1 117 8 discriminator 1 view .LVU12
+  91 0018 2021     		movs	r1, #32
+  92 001a 4FF09040 		mov	r0, #1207959552
+  93 001e FFF7FEFF 		bl	gpio_toggle
+  94              	.LVL4:
+ 118:src/m1a.c     ****        delay_loop(71427);
+  95              		.loc 1 118 8 discriminator 1 view .LVU13
+  96 0022 0248     		ldr	r0, .L7
+  97 0024 FFF7FEFF 		bl	delay_loop
+  98              	.LVL5:
+ 115:src/m1a.c     ****     while(1)
+  99              		.loc 1 115 10 discriminator 1 view .LVU14
+ 100 0028 F6E7     		b	.L5
+ 101              	.L8:
+ 102 002a 00BF     		.align	2
+ 103              	.L7:
+ 104 002c 03170100 		.word	71427
+ 105              		.cfi_endproc
+ 106              	.LFE4:
+ 108              		.text
+ 109              	.Letext0:
+ 110              		.file 2 "/home/lubuntu/Documents/ARMToolchain/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include
+ 111              		.file 3 "/home/lubuntu/Documents/ARMToolchain/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include
+ 112              		.file 4 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/rcc_common_
+ARM GAS  m1a.s 			page 5
+
+
+ 113              		.file 5 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/gpio_common
+ 114              		.file 6 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/common/gpio_common
+ 115              		.file 7 "/home/lubuntu/Documents/libOpenCM3/libopencm3/include/libopencm3/stm32/l4/rcc.h"
+ARM GAS  m1a.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 m1a.c
+               m1a.s:20     .text.delay_loop:0000000000000000 $t
+               m1a.s:25     .text.delay_loop:0000000000000000 delay_loop
+               m1a.s:59     .text.main:0000000000000000 $t
+               m1a.s:65     .text.main:0000000000000000 main
+               m1a.s:104    .text.main:000000000000002c $d
+
+UNDEFINED SYMBOLS
+rcc_periph_clock_enable
+gpio_mode_setup
+gpio_toggle

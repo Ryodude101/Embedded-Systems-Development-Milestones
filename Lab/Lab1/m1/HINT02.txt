@@ -1,0 +1,28 @@
+The utility "grep" is often crucial to an embedded systems
+designer.  The source code for your build is often spread
+across numerous trees.  In this task, your design is built
+from code in the directories here, PLUS the tree containing
+libOpenCM3.
+
+(Keep these trees separated. Sometimes, you need to update
+the libOpenCM3 from the repository.  You do not want that
+update operation to corrupt the code that you have written.)
+
+Later in the semester, your designs will incorporate my
+operating system.  It too relies on libOpenCM3 for its
+hardware access.  My OS will reside in its own folder --
+making at least three trees for a program.
+
+As you try to navigate and wrap your head around all that
+is going on, it is often useful to find all the occurences
+of a variable or function call, etc.  The tool "grep" is
+your friend.
+
+I strongly recommend you get "grep" working on your machine.
+(It is built-in with linux and MacOS.)  Learn at least the
+basics of grep.  It is a powerful tool!
+
+
+
+PS: To tell you how useful grep is, note that computer publisher
+    O'Reilly has an entire book dedicated to this one little utility. 

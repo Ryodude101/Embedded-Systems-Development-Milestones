@@ -1,0 +1,36 @@
+Some suggestions from the TA
+
+Embedded System Design Lab Setup for Windows
+===================================================
+
+Code editor: 
+This can be notepad++, sublime, VSCode or any other editor.
+
+Make tool: Kindly see this youtube video on how to install MinGW. Also, be sure to set the path in the environment variable.
+https://www.youtube.com/watch?v=sXW2VLrQ3Bs
+
+Python: This can be downloaded multiple ways. The website is https://www.python.org/downloads/ but you can also go to the microsoft store via the start menu and download it from there. I downloaded mine from the Microsoft store.
+
+PySerial Module: Once you install Python, PIP is also installed to your machine. You can go to
+this website and download it: https://pypi.org/project/pyserial/
+
+Git: Git can be installed from their website located here: https://git-scm.com/downloads
+
+ARM toolchain: The link is given in the document and works as such:
+https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+
+STM32CubeProgrammer: This link is also given in the document and takes you here:
+https://www.st.com/en/development-tools/stm32cubeprog.html
+
+libOpenCM3 Library: This library is large and no link is given in the document. This can be googled giving you this link to download it:
+https://github.com/libopencm3
+
+Things to note:
+    1) Edit the location of you libOpenCM3 in your make file
+    2) Edit the source to point to your c source code.
+    3) Add ARM tool chain path in your environmental variable
+    4) There is a folder in the MinGw folder named ‘Msys’. This can be used to compile (make) if the Mingw32-make does not work. MinGw will install in your C drive and you should access it from there.
+
+
+
+REV: 4 Feb 2021

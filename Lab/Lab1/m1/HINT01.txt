@@ -1,0 +1,18 @@
+The code skeleton provided is **NOT** complete.  It may
+even have errors in it.  (If you do find an error, please
+email the details to me so I can correct.)
+
+The scaffolding in folder "m1a" is a template that you
+can use to get a ARM-Cortex program up and running quickly.
+You should be able to copy the contents of this folder into
+a new folder, change the source, and recompile.  This is
+exactly the process you will follow to use the file in "m1b".
+
+You must read and understand the skelton provided to
+you.  In doing so, you should be able to identify what
+is missing. It is usually callled out.  For example,
+you will want to examine:
+
+* Makefile where the path to the libOpenCM3 folder is 
+  defined.  Search for "CM3_DIR".
+

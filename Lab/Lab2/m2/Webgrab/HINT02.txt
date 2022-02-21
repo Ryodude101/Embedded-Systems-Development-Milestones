@@ -1,0 +1,40 @@
+libOpenCM3 is a fairly simple hardware abstraction
+library (HAL).  However, it does cover four families
+of ARM-Cortex and devices from dozens of manufacturers
+totally hundreds of processors. The ALU of these chips
+are similar, but the hardware peripherals vary widely.
+Sometimes, it is challenging to get started with a
+new HW peripheral via the libOpenCM3 API.
+
+The documentation explains the API function calls and 
+constants, but sometimes a concrete example is more
+enlightening.  To assist you there, you might want
+to peruse the following repo:
+
+     https://github.com/libopencm3/libopencm3-examples
+
+Dive down into examples/stm32
+
+Pay special attention to the Cortex-M4 examples
+in the f4 and l4 folders.  We are targeting a L4
+device.  The F4 devices from STM are very similar
+and their configuration is not terribly different.
+Find an example that does actions similar to what
+you want. Read the code examples.
+
+DO NOT USE THE CODE BLINDLY. THAT ALMOST NEVER WORKS.
+
+Try to understand the code, then investigate
+the details of the libOpenCM3 documentation
+associated with this example code, then cross-reference
+with the datasheet for the chip in question. Once
+you understand the big picture, hop over into the L452
+datasheet and look for differences.... working your
+way back up through the libOpenCM3 to code (often
+adjusted or modified from the examples) that will
+work with the L452.
+
+While these examples are very simplistic and not
+likely to be exactly what you need for your
+particular design, they often provide a great
+starting point for your code.
