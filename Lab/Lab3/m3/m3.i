@@ -1,9 +1,9 @@
-# 1 "Source/m2a.c"
-# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/Lab/Lab2/m2//"
+# 1 "Source/m3.c"
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/Lab/Lab3/m3//"
 # 1 "<built-in>"
 # 1 "<command-line>"
-# 1 "Source/m2a.c"
-# 23 "Source/m2a.c"
+# 1 "Source/m3.c"
+# 10 "Source/m3.c"
 # 1 "Source/embsysS20.h" 1
 
 
@@ -989,57 +989,10 @@ void timer_slave_set_trigger(uint32_t timer, uint8_t trigger);
 # 37 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/l4/timer.h" 2
 # 43 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/timer.h" 2
 # 13 "Source/embsysS20.h" 2
-# 32 "Source/embsysS20.h"
-    void fn_clock_setup(void){
-        rcc_osc_on(RCC_HSI16);
-
-
-        rcc_set_main_pll(2, 4, 20, 0, 0, 0);
-
-        rcc_osc_on(RCC_PLL);
-
-        rcc_periph_clock_enable(RCC_TIM2);
-        rcc_periph_clock_enable(RCC_GPIOA);
-     rcc_periph_clock_enable(RCC_GPIOC);
-     rcc_periph_clock_enable(RCC_USART2);
-     return;
-    }
-
-    void fn_usart_setup(void){
-
-         gpio_mode_setup(((0x48000000U) + 0x0000), 0x2, 0x0, (1 << 2) | (1 << 3));
-
-
-         gpio_set_af(((0x48000000U) + 0x0000), 0x7, (1 << 2) | (1 << 3));
-
-
-         usart_set_baudrate((((0x40000000U) + 0x00000) + 0x4400), 57600);
-         usart_set_databits((((0x40000000U) + 0x00000) + 0x4400), 9);
-         usart_set_stopbits((((0x40000000U) + 0x00000) + 0x4400), (0x00 << 12));
-         usart_set_mode((((0x40000000U) + 0x00000) + 0x4400), ((1 << 2) | (1 << 3)));
-         usart_set_parity((((0x40000000U) + 0x00000) + 0x4400), ((1 << 9) | (1 << 10)));
-         usart_set_flow_control((((0x40000000U) + 0x00000) + 0x4400), 0x00);
-
-
-         usart_enable((((0x40000000U) + 0x00000) + 0x4400));
-    }
-
-    void fn_setup_tim2(){
-        rcc_periph_reset_pulse(RST_TIM2);
-
-
-
-
-
-        timer_set_prescaler((((0x40000000U) + 0x00000) + 0x0000), 200);
-        timer_set_period((((0x40000000U) + 0x00000) + 0x0000), 10000);
-
-        timer_enable_counter((((0x40000000U) + 0x00000) + 0x0000));
-        timer_enable_irq((((0x40000000U) + 0x00000) + 0x0000), (1 << 1));
-    }
-# 24 "Source/m2a.c" 2
-# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 1 3
-# 29 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 3
+# 1 "Source/circularBuffer.h" 1
+# 10 "Source/circularBuffer.h"
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/assert.h" 1 3
+# 9 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/assert.h" 3
 # 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/_ansi.h" 1 3
 # 10 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/_ansi.h" 3
 # 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/newlib.h" 1 3
@@ -1051,24 +1004,20 @@ void timer_slave_set_trigger(uint32_t timer, uint8_t trigger);
 # 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/ieeefp.h" 1 3
 # 5 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/config.h" 2 3
 # 12 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/_ansi.h" 2 3
-# 30 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 2 3
+# 10 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/assert.h" 2 3
+# 39 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/assert.h" 3
 
-
-
-
-
-# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/cdefs.h" 1 3
-# 47 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/cdefs.h" 3
-# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 1 3 4
-# 209 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 3 4
-
-# 209 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 3 4
-typedef unsigned int size_t;
-# 48 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/cdefs.h" 2 3
-# 36 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 2 3
+# 39 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/assert.h" 3
+void __assert (const char *, int, const char *)
+     __attribute__ ((__noreturn__));
+void __assert_func (const char *, int, const char *, const char *)
+     __attribute__ ((__noreturn__));
+# 11 "Source/circularBuffer.h" 2
 # 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 1 3 4
 # 143 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 3 4
 typedef int ptrdiff_t;
+# 209 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 3 4
+typedef unsigned int size_t;
 # 321 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 3 4
 typedef unsigned int wchar_t;
 # 415 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 3 4
@@ -1077,11 +1026,505 @@ typedef struct {
   long double __max_align_ld __attribute__((__aligned__(__alignof__(long double))));
 # 426 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 3 4
 } max_align_t;
+# 12 "Source/circularBuffer.h" 2
+
+
+    
+# 14 "Source/circularBuffer.h"
+   typedef struct st_circBuff{
+        char* pc_buffer;
+     size_t u_head;
+     size_t u_tail;
+     size_t u_max;
+     
+# 19 "Source/circularBuffer.h" 3 4
+    _Bool 
+# 19 "Source/circularBuffer.h"
+         b_full;
+    }st_circBuff;
+
+
+    void fn_circBuffReset(st_circBuff* pst_me){
+        
+# 24 "Source/circularBuffer.h" 3
+       ((
+# 24 "Source/circularBuffer.h"
+       pst_me
+# 24 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 24, __func__, 
+# 24 "Source/circularBuffer.h"
+       "pst_me"
+# 24 "Source/circularBuffer.h" 3
+       ))
+# 24 "Source/circularBuffer.h"
+                     ;
+
+     pst_me->u_head = 0;
+     pst_me->u_tail = 0;
+     pst_me->b_full = 
+# 28 "Source/circularBuffer.h" 3 4
+                     0
+# 28 "Source/circularBuffer.h"
+                          ;
+    }
+
+
+    
+# 32 "Source/circularBuffer.h" 3 4
+   _Bool 
+# 32 "Source/circularBuffer.h"
+        fn_circBuffEmpty(st_circBuff* pst_me){
+        
+# 33 "Source/circularBuffer.h" 3
+       ((
+# 33 "Source/circularBuffer.h"
+       pst_me
+# 33 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 33, __func__, 
+# 33 "Source/circularBuffer.h"
+       "pst_me"
+# 33 "Source/circularBuffer.h" 3
+       ))
+# 33 "Source/circularBuffer.h"
+                     ;
+
+     return (!pst_me->b_full && (pst_me->u_head == pst_me->u_tail));
+    }
+
+
+    void fn_circBuffInit(st_circBuff* pst_me, char* pc_buff, size_t u_size){
+        
+# 40 "Source/circularBuffer.h" 3
+       ((
+# 40 "Source/circularBuffer.h"
+       pst_me && pc_buff && u_size
+# 40 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 40, __func__, 
+# 40 "Source/circularBuffer.h"
+       "pst_me && pc_buff && u_size"
+# 40 "Source/circularBuffer.h" 3
+       ))
+# 40 "Source/circularBuffer.h"
+                                          ;
+
+        pst_me->pc_buffer = pc_buff;
+        pst_me->u_max = u_size;
+        fn_circBuffReset(pst_me);
+
+        
+# 46 "Source/circularBuffer.h" 3
+       ((
+# 46 "Source/circularBuffer.h"
+       fn_circBuffEmpty(pst_me)
+# 46 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 46, __func__, 
+# 46 "Source/circularBuffer.h"
+       "fn_circBuffEmpty(pst_me)"
+# 46 "Source/circularBuffer.h" 3
+       ))
+# 46 "Source/circularBuffer.h"
+                                       ;
+    }
+
+
+    
+# 50 "Source/circularBuffer.h" 3 4
+   _Bool 
+# 50 "Source/circularBuffer.h"
+        fn_circBuffFull(st_circBuff* pst_me){
+        
+# 51 "Source/circularBuffer.h" 3
+       ((
+# 51 "Source/circularBuffer.h"
+       pst_me
+# 51 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 51, __func__, 
+# 51 "Source/circularBuffer.h"
+       "pst_me"
+# 51 "Source/circularBuffer.h" 3
+       ))
+# 51 "Source/circularBuffer.h"
+                     ;
+
+ return pst_me->b_full;
+    }
+
+
+    size_t fn_circBuffCapacity(st_circBuff* pst_me){
+        
+# 58 "Source/circularBuffer.h" 3
+       ((
+# 58 "Source/circularBuffer.h"
+       pst_me
+# 58 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 58, __func__, 
+# 58 "Source/circularBuffer.h"
+       "pst_me"
+# 58 "Source/circularBuffer.h" 3
+       ))
+# 58 "Source/circularBuffer.h"
+                     ;
+
+ return pst_me->u_max;
+    }
+
+
+    size_t fn_circBuffSize(st_circBuff* pst_me){
+        
+# 65 "Source/circularBuffer.h" 3
+       ((
+# 65 "Source/circularBuffer.h"
+       pst_me
+# 65 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 65, __func__, 
+# 65 "Source/circularBuffer.h"
+       "pst_me"
+# 65 "Source/circularBuffer.h" 3
+       ))
+# 65 "Source/circularBuffer.h"
+                     ;
+
+ size_t u_size = pst_me->u_max;
+
+ if(!pst_me->b_full){
+  if(pst_me->u_head >= pst_me->u_tail)
+   u_size = pst_me->u_head - pst_me->u_tail;
+  else
+   u_size = pst_me->u_max + pst_me->u_head - pst_me->u_tail;
+ }
+
+ return u_size;
+    }
+
+
+    static void fn_advancePointer(st_circBuff* pst_me){
+        
+# 81 "Source/circularBuffer.h" 3
+       ((
+# 81 "Source/circularBuffer.h"
+       pst_me
+# 81 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 81, __func__, 
+# 81 "Source/circularBuffer.h"
+       "pst_me"
+# 81 "Source/circularBuffer.h" 3
+       ))
+# 81 "Source/circularBuffer.h"
+                     ;
+
+ if(pst_me->b_full){
+            if(++(pst_me->u_tail) == pst_me->u_max)
+         pst_me->u_tail = 0;
+ }
+
+ if(++(pst_me->u_head) == pst_me->u_max)
+     pst_me->u_head = 0;
+
+ pst_me->b_full = (pst_me->u_head == pst_me->u_tail);
+    }
+
+
+    static void fn_retreatPointer(st_circBuff* pst_me){
+        
+# 96 "Source/circularBuffer.h" 3
+       ((
+# 96 "Source/circularBuffer.h"
+       pst_me
+# 96 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 96, __func__, 
+# 96 "Source/circularBuffer.h"
+       "pst_me"
+# 96 "Source/circularBuffer.h" 3
+       ))
+# 96 "Source/circularBuffer.h"
+                     ;
+
+ pst_me->b_full = 
+# 98 "Source/circularBuffer.h" 3 4
+                 0
+# 98 "Source/circularBuffer.h"
+                      ;
+
+ if(++(pst_me->u_tail) == pst_me->u_max)
+  pst_me->u_tail = 0;
+
+    }
+
+
+    void fn_circBuffPut(st_circBuff* pst_me, char c_data){
+        
+# 107 "Source/circularBuffer.h" 3
+       ((
+# 107 "Source/circularBuffer.h"
+       pst_me && pst_me->pc_buffer
+# 107 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 107, __func__, 
+# 107 "Source/circularBuffer.h"
+       "pst_me && pst_me->pc_buffer"
+# 107 "Source/circularBuffer.h" 3
+       ))
+# 107 "Source/circularBuffer.h"
+                                          ;
+
+ pst_me->pc_buffer[pst_me->u_head] = c_data;
+
+ fn_advancePointer(pst_me);
+    }
+
+
+    
+# 115 "Source/circularBuffer.h" 3 4
+   _Bool 
+# 115 "Source/circularBuffer.h"
+        fn_circBuffGet(st_circBuff* pst_me, char* pc_data){
+
+        
+# 117 "Source/circularBuffer.h" 3
+       ((
+# 117 "Source/circularBuffer.h"
+       pst_me
+# 117 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 117, __func__, 
+# 117 "Source/circularBuffer.h"
+       "pst_me"
+# 117 "Source/circularBuffer.h" 3
+       ))
+# 117 "Source/circularBuffer.h"
+                     ;
+        
+# 118 "Source/circularBuffer.h" 3
+       ((
+# 118 "Source/circularBuffer.h"
+       pc_data
+# 118 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 118, __func__, 
+# 118 "Source/circularBuffer.h"
+       "pc_data"
+# 118 "Source/circularBuffer.h" 3
+       ))
+# 118 "Source/circularBuffer.h"
+                      ;
+        
+# 119 "Source/circularBuffer.h" 3
+       ((
+# 119 "Source/circularBuffer.h"
+       pst_me->pc_buffer
+# 119 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 119, __func__, 
+# 119 "Source/circularBuffer.h"
+       "pst_me->pc_buffer"
+# 119 "Source/circularBuffer.h" 3
+       ))
+# 119 "Source/circularBuffer.h"
+                                ;
+
+ 
+# 121 "Source/circularBuffer.h" 3 4
+_Bool 
+# 121 "Source/circularBuffer.h"
+     r = 
+# 121 "Source/circularBuffer.h" 3 4
+         0
+# 121 "Source/circularBuffer.h"
+              ;
+
+ if(!fn_circBuffEmpty(pst_me)){
+        *pc_data = pst_me->pc_buffer[pst_me->u_tail];
+     fn_retreatPointer(pst_me);
+
+    r = 
+# 127 "Source/circularBuffer.h" 3 4
+       1
+# 127 "Source/circularBuffer.h"
+           ;
+ }
+
+        return r;
+    }
+
+    
+# 133 "Source/circularBuffer.h" 3 4
+   _Bool 
+# 133 "Source/circularBuffer.h"
+        fn_circBuffGetMostRecent(st_circBuff* pst_me, char* pc_data){
+        
+# 134 "Source/circularBuffer.h" 3
+       ((
+# 134 "Source/circularBuffer.h"
+       pst_me && pc_data && pst_me->pc_buffer
+# 134 "Source/circularBuffer.h" 3
+       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 134, __func__, 
+# 134 "Source/circularBuffer.h"
+       "pst_me && pc_data && pst_me->pc_buffer"
+# 134 "Source/circularBuffer.h" 3
+       ))
+# 134 "Source/circularBuffer.h"
+                                                     ;
+
+        
+# 136 "Source/circularBuffer.h" 3 4
+       _Bool 
+# 136 "Source/circularBuffer.h"
+            r = 
+# 136 "Source/circularBuffer.h" 3 4
+                0
+# 136 "Source/circularBuffer.h"
+                     ;
+
+        if(!fn_circBuffEmpty(pst_me)){
+                if(pst_me->u_head == 0){
+                    pst_me->u_head = (pst_me->u_max) - 1;
+                *pc_data = pst_me->pc_buffer[pst_me->u_head];
+                r = 
+# 142 "Source/circularBuffer.h" 3 4
+                   1
+# 142 "Source/circularBuffer.h"
+                       ;
+            }
+            else{
+                *pc_data = pst_me->pc_buffer[--(pst_me->u_head)];
+            r = 
+# 146 "Source/circularBuffer.h" 3 4
+               1
+# 146 "Source/circularBuffer.h"
+                   ;
+            }
+        }
+
+        return r;
+    }
+# 14 "Source/embsysS20.h" 2
+# 36 "Source/embsysS20.h"
+    const char ac_CIPHER[13] = {'T','E','N','N','E','S','S','E','E','T','E','C','H'};
+
+    struct st_circBuff st_circularBufferInput;
+    struct st_circBuff st_circularBufferOutput;
+    char bufferI[256];
+    char bufferO[256];
+
+    uint16_t u16_globalPeriod = 1000;
+
+
+    void fn_convertToCaps(char* pc_Convert){
+    if(*pc_Convert >= 'a' && *pc_Convert <= 'z')
+        *pc_Convert = (*pc_Convert - 'a') + 'A';
+    }
+
+
+    char fn_encryptText(char c_toEncrypt){
+    static uint8_t u8_cipherEPosition = 0;
+
+    c_toEncrypt = (((c_toEncrypt - 'A') + (ac_CIPHER[u8_cipherEPosition] - 'A')) % 26) + 'A';
+    ++u8_cipherEPosition;
+
+    u8_cipherEPosition = (u8_cipherEPosition == 13) ? 0 : u8_cipherEPosition;
+
+    return c_toEncrypt;
+    }
+
+
+    char fn_decryptText(char c_toDecrypt){
+    static uint8_t u8_cipherDPosition = 0;
+
+    c_toDecrypt = ((c_toDecrypt - ac_CIPHER[u8_cipherDPosition] + 26) % 26) + 'A';
+
+    ++u8_cipherDPosition;
+
+    u8_cipherDPosition = (u8_cipherDPosition == 13) ? 0 : u8_cipherDPosition;
+
+    return c_toDecrypt;
+    }
+
+    void fn_clock_setup(void){
+        rcc_osc_on(RCC_HSI16);
+
+
+        rcc_set_main_pll(2, 4, 40, 0, 0, 0);
+
+        rcc_osc_on(RCC_PLL);
+
+        rcc_periph_clock_enable(RCC_TIM2);
+        rcc_periph_clock_enable(RCC_GPIOA);
+     rcc_periph_clock_enable(RCC_GPIOC);
+     rcc_periph_clock_enable(RCC_USART2);
+     return;
+    }
+
+    void fn_usart_setup(void){
+        nvic_enable_irq(38);
+
+
+         gpio_mode_setup(((0x48000000U) + 0x0000), 0x2, 0x0, (1 << 2) | (1 << 3));
+
+
+         gpio_set_af(((0x48000000U) + 0x0000), 0x7, (1 << 2) | (1 << 3));
+
+
+         usart_set_baudrate((((0x40000000U) + 0x00000) + 0x4400), 57600);
+         usart_set_databits((((0x40000000U) + 0x00000) + 0x4400), 9);
+         usart_set_stopbits((((0x40000000U) + 0x00000) + 0x4400), (0x00 << 12));
+         usart_set_mode((((0x40000000U) + 0x00000) + 0x4400), ((1 << 2) | (1 << 3)));
+         usart_set_parity((((0x40000000U) + 0x00000) + 0x4400), 0x00);
+         usart_set_flow_control((((0x40000000U) + 0x00000) + 0x4400), 0x00);
+
+         usart_enable_rx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+
+
+         usart_enable((((0x40000000U) + 0x00000) + 0x4400));
+    }
+
+    void usart2_isr(void){
+
+        if ((((*(volatile uint32_t *)(((((0x40000000U) + 0x00000) + 0x4400)) + 0x00)) & (1 << 5)) != 0) && (usart_get_flag((((0x40000000U) + 0x00000) + 0x4400),(1 << 5)))){
+
+            fn_circBuffPut(&st_circularBufferInput, usart_recv((((0x40000000U) + 0x00000) + 0x4400)));
+        }
+
+
+        if ((((*(volatile uint32_t *)(((((0x40000000U) + 0x00000) + 0x4400)) + 0x00)) & (1 << 7)) != 0) && (usart_get_flag((((0x40000000U) + 0x00000) + 0x4400),(1 << 7)))){
+            char c_charToSend = '\0';
+            fn_circBuffGet(&st_circularBufferOutput, &c_charToSend);
+
+            usart_send((((0x40000000U) + 0x00000) + 0x4400), c_charToSend);
+
+            if(fn_circBuffEmpty(&st_circularBufferOutput))
+                usart_disable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+        }
+    }
+
+    void fn_setup_tim2(){
+        nvic_enable_irq(28);
+        rcc_periph_reset_pulse(RST_TIM2);
+     timer_set_prescaler((((0x40000000U) + 0x00000) + 0x0000), 2000);
+        timer_set_period((((0x40000000U) + 0x00000) + 0x0000), 1000);
+     timer_enable_counter((((0x40000000U) + 0x00000) + 0x0000));
+     timer_enable_irq((((0x40000000U) + 0x00000) + 0x0000), (1 << 1));
+    }
+
+    void tim2_isr(void){
+        if(timer_get_flag((((0x40000000U) + 0x00000) + 0x0000),(1 << 1))){
+            timer_set_period((((0x40000000U) + 0x00000) + 0x0000), u16_globalPeriod);
+            timer_clear_flag((((0x40000000U) + 0x00000) + 0x0000), (1 << 1));
+
+            gpio_toggle(((0x48000000U) + 0x0000),(1 << 5));
+        }
+}
+# 11 "Source/m3.c" 2
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 1 3
+# 35 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 3
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/cdefs.h" 1 3
+# 47 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/cdefs.h" 3
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 1 3 4
+# 48 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/cdefs.h" 2 3
+# 36 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 2 3
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 1 3 4
 # 37 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 2 3
 
 
 
 # 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h" 1 3 4
+# 40 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h" 3 4
+
 # 40 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h" 3 4
 typedef __builtin_va_list __gnuc_va_list;
 # 41 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 2 3
@@ -2199,7 +2642,7 @@ _putchar_unlocked(int _c)
 }
 # 797 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h" 3
 
-# 25 "Source/m2a.c" 2
+# 12 "Source/m3.c" 2
 # 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/errno.h" 1 3
 
 
@@ -2219,7 +2662,7 @@ extern int *__errno (void);
 extern const char * const _sys_errlist[];
 extern int _sys_nerr;
 # 10 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/errno.h" 2 3
-# 26 "Source/m2a.c" 2
+# 13 "Source/m3.c" 2
 # 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/unistd.h" 1 3
 
 
@@ -2497,392 +2940,301 @@ ssize_t readlinkat (int __dirfd1, const char *restrict __path,
 int symlinkat (const char *, int, const char *);
 int unlinkat (int, const char *, int);
 # 5 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/unistd.h" 2 3
-# 27 "Source/m2a.c" 2
-# 1 "Source/circularBuffer.h" 1
-# 10 "Source/circularBuffer.h"
-# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/assert.h" 1 3
-# 39 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/assert.h" 3
-void __assert (const char *, int, const char *)
-     __attribute__ ((__noreturn__));
-void __assert_func (const char *, int, const char *, const char *)
-     __attribute__ ((__noreturn__));
-# 11 "Source/circularBuffer.h" 2
-
-
-    
-# 13 "Source/circularBuffer.h"
-   typedef struct st_circBuff{
-        char* pc_buffer;
-     size_t u_head;
-     size_t u_tail;
-     size_t u_max;
-     
-# 18 "Source/circularBuffer.h" 3 4
-    _Bool 
-# 18 "Source/circularBuffer.h"
-         b_full;
-    }st_circBuff;
-
-
-    void fn_circBuffReset(st_circBuff* pst_me){
-        
-# 23 "Source/circularBuffer.h" 3
-       ((
-# 23 "Source/circularBuffer.h"
-       pst_me
-# 23 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 23, __func__, 
-# 23 "Source/circularBuffer.h"
-       "pst_me"
-# 23 "Source/circularBuffer.h" 3
-       ))
-# 23 "Source/circularBuffer.h"
-                     ;
-
-     pst_me->u_head = 0;
-     pst_me->u_tail = 0;
-     pst_me->b_full = 
-# 27 "Source/circularBuffer.h" 3 4
-                     0
-# 27 "Source/circularBuffer.h"
-                          ;
-    }
-
-
-    
-# 31 "Source/circularBuffer.h" 3 4
-   _Bool 
-# 31 "Source/circularBuffer.h"
-        fn_circBuffEmpty(st_circBuff* pst_me){
-        
-# 32 "Source/circularBuffer.h" 3
-       ((
-# 32 "Source/circularBuffer.h"
-       pst_me
-# 32 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 32, __func__, 
-# 32 "Source/circularBuffer.h"
-       "pst_me"
-# 32 "Source/circularBuffer.h" 3
-       ))
-# 32 "Source/circularBuffer.h"
-                     ;
-
-     return (!pst_me->b_full && (pst_me->u_head == pst_me->u_tail));
-    }
-
-
-    void fn_circBuffInit(st_circBuff* pst_me, char* pc_buff, size_t u_size){
-        
-# 39 "Source/circularBuffer.h" 3
-       ((
-# 39 "Source/circularBuffer.h"
-       pst_me && pc_buff && u_size
-# 39 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 39, __func__, 
-# 39 "Source/circularBuffer.h"
-       "pst_me && pc_buff && u_size"
-# 39 "Source/circularBuffer.h" 3
-       ))
-# 39 "Source/circularBuffer.h"
-                                          ;
-
-        pst_me->pc_buffer = pc_buff;
-        pst_me->u_max = u_size;
-        fn_circBuffReset(pst_me);
-
-        
-# 45 "Source/circularBuffer.h" 3
-       ((
-# 45 "Source/circularBuffer.h"
-       fn_circBuffEmpty(pst_me)
-# 45 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 45, __func__, 
-# 45 "Source/circularBuffer.h"
-       "fn_circBuffEmpty(pst_me)"
-# 45 "Source/circularBuffer.h" 3
-       ))
-# 45 "Source/circularBuffer.h"
-                                       ;
-    }
-
-
-    
-# 49 "Source/circularBuffer.h" 3 4
-   _Bool 
-# 49 "Source/circularBuffer.h"
-        fn_circBuffFull(st_circBuff* pst_me){
-        
-# 50 "Source/circularBuffer.h" 3
-       ((
-# 50 "Source/circularBuffer.h"
-       pst_me
-# 50 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 50, __func__, 
-# 50 "Source/circularBuffer.h"
-       "pst_me"
-# 50 "Source/circularBuffer.h" 3
-       ))
-# 50 "Source/circularBuffer.h"
-                     ;
-
- return pst_me->b_full;
-    }
-
-
-    size_t fn_circBuffCapacity(st_circBuff* pst_me){
-        
-# 57 "Source/circularBuffer.h" 3
-       ((
-# 57 "Source/circularBuffer.h"
-       pst_me
-# 57 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 57, __func__, 
-# 57 "Source/circularBuffer.h"
-       "pst_me"
-# 57 "Source/circularBuffer.h" 3
-       ))
-# 57 "Source/circularBuffer.h"
-                     ;
-
- return pst_me->u_max;
-    }
-
-
-    size_t fn_circBuffSize(st_circBuff* pst_me){
-        
-# 64 "Source/circularBuffer.h" 3
-       ((
-# 64 "Source/circularBuffer.h"
-       pst_me
-# 64 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 64, __func__, 
-# 64 "Source/circularBuffer.h"
-       "pst_me"
-# 64 "Source/circularBuffer.h" 3
-       ))
-# 64 "Source/circularBuffer.h"
-                     ;
-
- size_t u_size = pst_me->u_max;
-
- if(!pst_me->b_full){
-  if(pst_me->u_head >= pst_me->u_tail)
-   u_size = pst_me->u_head - pst_me->u_tail;
-  else
-   u_size = pst_me->u_max + pst_me->u_head - pst_me->u_tail;
- }
-
- return u_size;
-    }
-
-
-    static void fn_advancePointer(st_circBuff* pst_me){
-        
-# 80 "Source/circularBuffer.h" 3
-       ((
-# 80 "Source/circularBuffer.h"
-       pst_me
-# 80 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 80, __func__, 
-# 80 "Source/circularBuffer.h"
-       "pst_me"
-# 80 "Source/circularBuffer.h" 3
-       ))
-# 80 "Source/circularBuffer.h"
-                     ;
-
- if(pst_me->b_full){
-            if(++(pst_me->u_tail) == pst_me->u_max)
-         pst_me->u_tail = 0;
- }
-
- if(++(pst_me->u_head) == pst_me->u_max)
-     pst_me->u_head = 0;
-
- pst_me->b_full = (pst_me->u_head == pst_me->u_tail);
-    }
-
-
-    static void fn_retreatPointer(st_circBuff* pst_me){
-        
-# 95 "Source/circularBuffer.h" 3
-       ((
-# 95 "Source/circularBuffer.h"
-       pst_me
-# 95 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 95, __func__, 
-# 95 "Source/circularBuffer.h"
-       "pst_me"
-# 95 "Source/circularBuffer.h" 3
-       ))
-# 95 "Source/circularBuffer.h"
-                     ;
-
- pst_me->b_full = 
-# 97 "Source/circularBuffer.h" 3 4
-                 0
-# 97 "Source/circularBuffer.h"
-                      ;
-
- if(++(pst_me->u_tail) == pst_me->u_max)
-  pst_me->u_tail = 0;
-
-    }
-
-
-    void fn_circBuffPut(st_circBuff* pst_me, char c_data){
-        
-# 106 "Source/circularBuffer.h" 3
-       ((
-# 106 "Source/circularBuffer.h"
-       pst_me && pst_me->pc_buffer
-# 106 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 106, __func__, 
-# 106 "Source/circularBuffer.h"
-       "pst_me && pst_me->pc_buffer"
-# 106 "Source/circularBuffer.h" 3
-       ))
-# 106 "Source/circularBuffer.h"
-                                          ;
-
- pst_me->pc_buffer[pst_me->u_head] = c_data;
-
- fn_advancePointer(pst_me);
-    }
-
-
-    
-# 114 "Source/circularBuffer.h" 3 4
-   _Bool 
-# 114 "Source/circularBuffer.h"
-        fn_circBuffGet(st_circBuff* pst_me, char* pc_data){
-
-        
-# 116 "Source/circularBuffer.h" 3
-       ((
-# 116 "Source/circularBuffer.h"
-       pst_me
-# 116 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 116, __func__, 
-# 116 "Source/circularBuffer.h"
-       "pst_me"
-# 116 "Source/circularBuffer.h" 3
-       ))
-# 116 "Source/circularBuffer.h"
-                     ;
-        
-# 117 "Source/circularBuffer.h" 3
-       ((
-# 117 "Source/circularBuffer.h"
-       pc_data
-# 117 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 117, __func__, 
-# 117 "Source/circularBuffer.h"
-       "pc_data"
-# 117 "Source/circularBuffer.h" 3
-       ))
-# 117 "Source/circularBuffer.h"
-                      ;
-        
-# 118 "Source/circularBuffer.h" 3
-       ((
-# 118 "Source/circularBuffer.h"
-       pst_me->pc_buffer
-# 118 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 118, __func__, 
-# 118 "Source/circularBuffer.h"
-       "pst_me->pc_buffer"
-# 118 "Source/circularBuffer.h" 3
-       ))
-# 118 "Source/circularBuffer.h"
-                                ;
-
- 
-# 120 "Source/circularBuffer.h" 3 4
-_Bool 
-# 120 "Source/circularBuffer.h"
-     r = 
-# 120 "Source/circularBuffer.h" 3 4
-         0
-# 120 "Source/circularBuffer.h"
-              ;
-
- if(!fn_circBuffEmpty(pst_me)){
-        *pc_data = pst_me->pc_buffer[pst_me->u_tail];
-     fn_retreatPointer(pst_me);
-
-    r = 
-# 126 "Source/circularBuffer.h" 3 4
-       1
-# 126 "Source/circularBuffer.h"
-           ;
- }
-
-        return r;
-    }
-
-    
-# 132 "Source/circularBuffer.h" 3 4
-   _Bool 
-# 132 "Source/circularBuffer.h"
-        fn_circBuffGetMostRecent(st_circBuff* pst_me, char* pc_data){
-        
-# 133 "Source/circularBuffer.h" 3
-       ((
-# 133 "Source/circularBuffer.h"
-       pst_me && pc_data && pst_me->pc_buffer
-# 133 "Source/circularBuffer.h" 3
-       ) ? (void)0 : __assert_func ("Source/circularBuffer.h", 133, __func__, 
-# 133 "Source/circularBuffer.h"
-       "pst_me && pc_data && pst_me->pc_buffer"
-# 133 "Source/circularBuffer.h" 3
-       ))
-# 133 "Source/circularBuffer.h"
-                                                     ;
-
-        
-# 135 "Source/circularBuffer.h" 3 4
-       _Bool 
-# 135 "Source/circularBuffer.h"
-            r = 
-# 135 "Source/circularBuffer.h" 3 4
-                0
-# 135 "Source/circularBuffer.h"
-                     ;
-
-        if(!fn_circBuffEmpty(pst_me)){
-                if(pst_me->u_head == 0){
-                    pst_me->u_head = (pst_me->u_max) - 1;
-                *pc_data = pst_me->pc_buffer[pst_me->u_head];
-                r = 
-# 141 "Source/circularBuffer.h" 3 4
-                   1
-# 141 "Source/circularBuffer.h"
-                       ;
-            }
-            else{
-                *pc_data = pst_me->pc_buffer[--(pst_me->u_head)];
-            r = 
-# 145 "Source/circularBuffer.h" 3 4
-               1
-# 145 "Source/circularBuffer.h"
-                   ;
-            }
-        }
-
-        return r;
-    }
-# 28 "Source/m2a.c" 2
+# 14 "Source/m3.c" 2
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 1 3
+# 10 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 3
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/ieeefp.h" 1 3
+# 11 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 2 3
 
 
 
 
-char fn_encryptText(char c_toEncrypt);
-char fn_decryptText(char c_toDecrypt);
-void fn_convertToCaps(char* pc_Convert);
 
-const char ac_CIPHER[13] = {'T','E','N','N','E','S','S','E','E','T','E','C','H'};
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h" 1 3 4
+# 17 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 2 3
+
+
+
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/stdlib.h" 1 3
+# 21 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 2 3
+
+# 1 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/alloca.h" 1 3
+# 23 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 2 3
+# 33 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 3
+
+
+typedef struct
+{
+  int quot;
+  int rem;
+} div_t;
+
+typedef struct
+{
+  long quot;
+  long rem;
+} ldiv_t;
+
+
+typedef struct
+{
+  long long int quot;
+  long long int rem;
+} lldiv_t;
+
+
+
+
+typedef int (*__compar_fn_t) (const void *, const void *);
+
+
+
+
+
+
+
+int __locale_mb_cur_max (void);
+
+
+
+void abort (void) __attribute__ ((__noreturn__));
+int abs (int);
+
+__uint32_t arc4random (void);
+__uint32_t arc4random_uniform (__uint32_t);
+void arc4random_buf (void *, size_t);
+
+int atexit (void (*__func)(void));
+double atof (const char *__nptr);
+
+float atoff (const char *__nptr);
+
+int atoi (const char *__nptr);
+int _atoi_r (struct _reent *, const char *__nptr);
+long atol (const char *__nptr);
+long _atol_r (struct _reent *, const char *__nptr);
+void * bsearch (const void *__key,
+         const void *__base,
+         size_t __nmemb,
+         size_t __size,
+         __compar_fn_t _compar);
+void *calloc(size_t, size_t) __attribute__((__malloc__)) __attribute__((__warn_unused_result__))
+      __attribute__((__alloc_size__(1, 2))) ;
+div_t div (int __numer, int __denom);
+void exit (int __status) __attribute__ ((__noreturn__));
+void free (void *) ;
+char * getenv (const char *__string);
+char * _getenv_r (struct _reent *, const char *__string);
+
+
+
+char * _findenv (const char *, int *);
+char * _findenv_r (struct _reent *, const char *, int *);
+
+extern char *suboptarg;
+int getsubopt (char **, char * const *, char **);
+
+long labs (long);
+ldiv_t ldiv (long __numer, long __denom);
+void *malloc(size_t) __attribute__((__malloc__)) __attribute__((__warn_unused_result__)) __attribute__((__alloc_size__(1))) ;
+int mblen (const char *, size_t);
+int _mblen_r (struct _reent *, const char *, size_t, _mbstate_t *);
+int mbtowc (wchar_t *restrict, const char *restrict, size_t);
+int _mbtowc_r (struct _reent *, wchar_t *restrict, const char *restrict, size_t, _mbstate_t *);
+int wctomb (char *, wchar_t);
+int _wctomb_r (struct _reent *, char *, wchar_t, _mbstate_t *);
+size_t mbstowcs (wchar_t *restrict, const char *restrict, size_t);
+size_t _mbstowcs_r (struct _reent *, wchar_t *restrict, const char *restrict, size_t, _mbstate_t *);
+size_t wcstombs (char *restrict, const wchar_t *restrict, size_t);
+size_t _wcstombs_r (struct _reent *, char *restrict, const wchar_t *restrict, size_t, _mbstate_t *);
+
+
+char * mkdtemp (char *);
+
+
+
+
+
+
+int mkstemp (char *);
+
+
+int mkstemps (char *, int);
+
+
+char * mktemp (char *) __attribute__ ((__deprecated__("the use of `mktemp' is dangerous; use `mkstemp' instead")));
+
+
+char * _mkdtemp_r (struct _reent *, char *);
+int _mkostemp_r (struct _reent *, char *, int);
+int _mkostemps_r (struct _reent *, char *, int, int);
+int _mkstemp_r (struct _reent *, char *);
+int _mkstemps_r (struct _reent *, char *, int);
+char * _mktemp_r (struct _reent *, char *) __attribute__ ((__deprecated__("the use of `mktemp' is dangerous; use `mkstemp' instead")));
+void qsort (void *__base, size_t __nmemb, size_t __size, __compar_fn_t _compar);
+int rand (void);
+void *realloc(void *, size_t) __attribute__((__warn_unused_result__)) __attribute__((__alloc_size__(2))) ;
+
+void *reallocarray(void *, size_t, size_t) __attribute__((__warn_unused_result__)) __attribute__((__alloc_size__(2, 3)));
+void *reallocf(void *, size_t) __attribute__((__warn_unused_result__)) __attribute__((__alloc_size__(2)));
+
+
+char * realpath (const char *restrict path, char *restrict resolved_path);
+
+
+int rpmatch (const char *response);
+
+
+
+
+void srand (unsigned __seed);
+double strtod (const char *restrict __n, char **restrict __end_PTR);
+double _strtod_r (struct _reent *,const char *restrict __n, char **restrict __end_PTR);
+
+float strtof (const char *restrict __n, char **restrict __end_PTR);
+
+
+
+
+
+
+
+long strtol (const char *restrict __n, char **restrict __end_PTR, int __base);
+long _strtol_r (struct _reent *,const char *restrict __n, char **restrict __end_PTR, int __base);
+unsigned long strtoul (const char *restrict __n, char **restrict __end_PTR, int __base);
+unsigned long _strtoul_r (struct _reent *,const char *restrict __n, char **restrict __end_PTR, int __base);
+# 191 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 3
+int system (const char *__string);
+
+
+long a64l (const char *__input);
+char * l64a (long __input);
+char * _l64a_r (struct _reent *,long __input);
+
+
+int on_exit (void (*__func)(int, void *),void *__arg);
+
+
+void _Exit (int __status) __attribute__ ((__noreturn__));
+
+
+int putenv (char *__string);
+
+int _putenv_r (struct _reent *, char *__string);
+void * _reallocf_r (struct _reent *, void *, size_t);
+
+int setenv (const char *__string, const char *__value, int __overwrite);
+
+int _setenv_r (struct _reent *, const char *__string, const char *__value, int __overwrite);
+# 224 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 3
+char * __itoa (int, char *, int);
+char * __utoa (unsigned, char *, int);
+
+char * itoa (int, char *, int);
+char * utoa (unsigned, char *, int);
+
+
+int rand_r (unsigned *__seed);
+
+
+
+double drand48 (void);
+double _drand48_r (struct _reent *);
+double erand48 (unsigned short [3]);
+double _erand48_r (struct _reent *, unsigned short [3]);
+long jrand48 (unsigned short [3]);
+long _jrand48_r (struct _reent *, unsigned short [3]);
+void lcong48 (unsigned short [7]);
+void _lcong48_r (struct _reent *, unsigned short [7]);
+long lrand48 (void);
+long _lrand48_r (struct _reent *);
+long mrand48 (void);
+long _mrand48_r (struct _reent *);
+long nrand48 (unsigned short [3]);
+long _nrand48_r (struct _reent *, unsigned short [3]);
+unsigned short *
+       seed48 (unsigned short [3]);
+unsigned short *
+       _seed48_r (struct _reent *, unsigned short [3]);
+void srand48 (long);
+void _srand48_r (struct _reent *, long);
+
+
+char * initstate (unsigned, char *, size_t);
+long random (void);
+char * setstate (char *);
+void srandom (unsigned);
+
+
+long long atoll (const char *__nptr);
+
+long long _atoll_r (struct _reent *, const char *__nptr);
+
+long long llabs (long long);
+lldiv_t lldiv (long long __numer, long long __denom);
+long long strtoll (const char *restrict __n, char **restrict __end_PTR, int __base);
+
+long long _strtoll_r (struct _reent *, const char *restrict __n, char **restrict __end_PTR, int __base);
+
+unsigned long long strtoull (const char *restrict __n, char **restrict __end_PTR, int __base);
+
+unsigned long long _strtoull_r (struct _reent *, const char *restrict __n, char **restrict __end_PTR, int __base);
+
+
+
+void cfree (void *);
+
+
+int unsetenv (const char *__string);
+
+int _unsetenv_r (struct _reent *, const char *__string);
+
+
+
+int posix_memalign (void **, size_t, size_t) __attribute__((__nonnull__ (1)))
+     __attribute__((__warn_unused_result__));
+
+
+char * _dtoa_r (struct _reent *, double, int, int, int *, int*, char**);
+
+void * _malloc_r (struct _reent *, size_t) ;
+void * _calloc_r (struct _reent *, size_t, size_t) ;
+void _free_r (struct _reent *, void *) ;
+void * _realloc_r (struct _reent *, void *, size_t) ;
+void _mstats_r (struct _reent *, char *);
+
+int _system_r (struct _reent *, const char *);
+
+void __eprintf (const char *, const char *, unsigned int, const char *);
+# 312 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 3
+void qsort_r (void *__base, size_t __nmemb, size_t __size, void *__thunk, int (*_compar)(void *, const void *, const void *))
+             __asm__ ("" "__bsd_qsort_r");
+# 322 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdlib.h" 3
+extern long double _strtold_r (struct _reent *, const char *restrict, char **restrict);
+
+extern long double strtold (const char *restrict, char **restrict);
+
+
+
+
+
+
+
+void * aligned_alloc(size_t, size_t) __attribute__((__malloc__)) __attribute__((__alloc_align__(1)))
+     __attribute__((__alloc_size__(2))) __attribute__((__warn_unused_result__));
+int at_quick_exit(void (*)(void));
+_Noreturn void
+ quick_exit(int);
+
+
+
+# 15 "Source/m3.c" 2
+
+
+# 16 "Source/m3.c"
+void fn_handleChar(char c_toHandle);
+void fn_encDecChar(char c_toDo);
+void fn_commitPeriod(char* ac_toCommit);
 
 
 
@@ -2890,13 +3242,13 @@ int _write(int file, char* ptr, int len){
     int i;
 
     if (file == 
-# 43 "Source/m2a.c" 3
+# 25 "Source/m3.c" 3
                1 
-# 43 "Source/m2a.c"
+# 25 "Source/m3.c"
                              || file == 
-# 43 "Source/m2a.c" 3
+# 25 "Source/m3.c" 3
                                         2
-# 43 "Source/m2a.c"
+# 25 "Source/m3.c"
                                                      ){
      for(i = 0; i < len; i++){
       if(ptr[i] == '\n')
@@ -2909,13 +3261,13 @@ int _write(int file, char* ptr, int len){
     }
 
     
-# 54 "Source/m2a.c" 3
+# 36 "Source/m3.c" 3
    (*__errno()) 
-# 54 "Source/m2a.c"
+# 36 "Source/m3.c"
          = 
-# 54 "Source/m2a.c" 3
+# 36 "Source/m3.c" 3
            5
-# 54 "Source/m2a.c"
+# 36 "Source/m3.c"
               ;
     return -1;
 }
@@ -2924,12 +3276,8 @@ int _write(int file, char* ptr, int len){
 
 int main(void) {
 
-
-  static struct st_circBuff st_circularBuffer;
-  static char buffer[256];
-  fn_circBuffInit(&st_circularBuffer, buffer, 256);
-
-  char c_charToSend = '\0';
+  fn_circBuffInit(&st_circularBufferInput, bufferI, 256);
+  fn_circBuffInit(&st_circularBufferOutput, bufferO, 256);
 
 
   fn_clock_setup();
@@ -2942,78 +3290,136 @@ int main(void) {
   gpio_clear(((0x48000000U) + 0x0000),(1 << 5));
 
   while(
-# 79 "Source/m2a.c" 3 4
+# 57 "Source/m3.c" 3 4
        1
-# 79 "Source/m2a.c"
+# 57 "Source/m3.c"
            ){
-
-
-    if(usart_get_flag((((0x40000000U) + 0x00000) + 0x4400), (1 << 5)))
-      fn_circBuffPut(&st_circularBuffer, usart_recv_blocking((((0x40000000U) + 0x00000) + 0x4400)));
-
-
-    if(!fn_circBuffEmpty(&st_circularBuffer)){
-      fn_circBuffGet(&st_circularBuffer, &c_charToSend);
-      fn_convertToCaps(&c_charToSend);
-
-      if((((gpio_get(((0x48000000U) + 0x0800),(1 << 13))))^(1 << 13)))
-        c_charToSend = fn_decryptText(c_charToSend);
-
-      else if((gpio_get(((0x48000000U) + 0x0800),(1 << 13))))
-        c_charToSend = fn_encryptText(c_charToSend);
-
-      else{
-        printf("Indeterminate button state!... Defaulting to Encrypt!");
-        c_charToSend = fn_encryptText(c_charToSend);
-      }
-
-
-      if(usart_get_flag((((0x40000000U) + 0x00000) + 0x4400), (1 << 7)))
-        usart_send_blocking((((0x40000000U) + 0x00000) + 0x4400), c_charToSend);
-    }
-
-
-    if(timer_get_flag((((0x40000000U) + 0x00000) + 0x0000),(1 << 1))){
-      timer_clear_flag((((0x40000000U) + 0x00000) + 0x0000), (1 << 1));
-
-      if((((gpio_get(((0x48000000U) + 0x0800),(1 << 13))))^(1 << 13)))
-        timer_set_period((((0x40000000U) + 0x00000) + 0x0000), 2500);
-      else
-        timer_set_period((((0x40000000U) + 0x00000) + 0x0000), 10000);
-
-      gpio_toggle(((0x48000000U) + 0x0000),(1 << 5));
+    if(!fn_circBuffEmpty(&st_circularBufferInput)){
+      char c_charToSend = '\0';
+      fn_circBuffGet(&st_circularBufferInput, &c_charToSend);
+      fn_handleChar(c_charToSend);
     }
   }
   return 0;
 }
 
 
-void fn_convertToCaps(char* pc_Convert){
-  if(*pc_Convert >= 'a' && *pc_Convert <= 'z')
-    *pc_Convert = (*pc_Convert - 'a') + 'A';
+
+
+
+
+void fn_handleChar(char c_toHandle){
+  static uint8_t u8_case = 0;
+  static char ac_period[4] = {'1','0','0','0'};
+  static char ac_lastPeriod[4] = {'1','0','0','0'};
+
+
+  if(c_toHandle == '!' && u8_case != 3)
+    ++u8_case;
+  else if(u8_case == 3 && c_toHandle == 'L')
+    u8_case = 4;
+  else if(u8_case == 3 && c_toHandle == 'S')
+    u8_case = 5;
+  else if(u8_case == 3 && c_toHandle == '!'){
+    u8_case = 10;
+  }
+  else if(u8_case < 6)
+    u8_case = 0;
+  else if(u8_case >= 6 &&(c_toHandle < 0x30 || c_toHandle > 0x39)){
+    u8_case = 0;
+    printf("Invalid period, change not commited.\n");
+    for(int i = 0; i < 4; i++)
+      ac_period[i] = ac_lastPeriod[i];
+    return;
+  }
+
+
+  switch(u8_case){
+    case 0:
+      fn_encDecChar(c_toHandle);
+      break;
+    case 1:
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 2:
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 3:
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 4:
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      for(int i = 0; i < 4; i++)
+        fn_circBuffPut(&st_circularBufferOutput, ac_period[i]);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      u8_case = 0;
+      break;
+    case 5:
+      ++u8_case;
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 6:
+      ++u8_case;
+      ac_period[0] = c_toHandle;
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 7:
+      ++u8_case;
+      ac_period[1] = c_toHandle;
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 8:
+      ++u8_case;
+      ac_period[2] = c_toHandle;
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 9:
+      u8_case = 0;
+      ac_period[3] = c_toHandle;
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      fn_commitPeriod(ac_period);
+      for(int i = 0; i < 4; i++)
+        ac_lastPeriod[i] = ac_period[i];
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+    case 10:
+      u8_case = 3;
+      fn_circBuffPut(&st_circularBufferOutput, c_toHandle);
+      usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
+      break;
+  }
 }
 
 
-char fn_encryptText(char c_toEncrypt){
-  static uint8_t u8_cipherEPosition = 0;
+void fn_encDecChar(char c_toDo){
+  fn_convertToCaps(&c_toDo);
 
-  c_toEncrypt = (((c_toEncrypt - 'A') + (ac_CIPHER[u8_cipherEPosition] - 'A')) % 26) + 'A';
-  ++u8_cipherEPosition;
+  if((((gpio_get(((0x48000000U) + 0x0800),(1 << 13))))^(1 << 13)))
+      c_toDo = fn_decryptText(c_toDo);
 
-  u8_cipherEPosition = (u8_cipherEPosition == 13) ? 0 : u8_cipherEPosition;
+  else
+      c_toDo = fn_encryptText(c_toDo);
 
-  return c_toEncrypt;
+  fn_circBuffPut(&st_circularBufferOutput, c_toDo);
+
+  usart_enable_tx_interrupt((((0x40000000U) + 0x00000) + 0x4400));
 }
 
 
-char fn_decryptText(char c_toDecrypt){
-  static uint8_t u8_cipherDPosition = 0;
+void fn_commitPeriod(char* ac_toCommit){
+  char ac_convertThis[5] = {'0','0','0','0','\0'};
 
-  c_toDecrypt = ((c_toDecrypt - ac_CIPHER[u8_cipherDPosition] + 26) % 26) + 'A';
+  for(int i = 0; i < 4; i++)
+    ac_convertThis[i] = ac_toCommit[i];
 
-  ++u8_cipherDPosition;
+  uint16_t u16_period = atoi(ac_convertThis);
 
-  u8_cipherDPosition = (u8_cipherDPosition == 13) ? 0 : u8_cipherDPosition;
-
-  return c_toDecrypt;
+  u16_globalPeriod = u16_period;
 }

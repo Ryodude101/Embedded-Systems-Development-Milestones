@@ -6,6 +6,20 @@
  * While running, if the user holds B1, the output will switch to decrypt from encrypt
  */
 
+/*
+ * Compute actual baud rate of the system:
+ * 
+ * From STs USART Training Manual https://www.st.com/content/ccc/resource/training/technical/product_training/group0/b1/26/c3/87/d8/7a/42/27/STM32H7-Peripheral-USART_interface_USART/files/STM32H7-Peripheral-USART_interface_USART.pdf/_jcr_content/translations/en.STM32H7-Peripheral-USART_interface_USART.pdf
+ * By default, the clock for usart is using RCC_APB1, which we know is at 4 MHz. 
+ * Libopencm3 docs under USART API usart_set_baudrate() tells us by default the OVER8 register is 0 therefore we're oversampling by 16.
+ * 
+ * 4M / 16 = 250K, 250k / 57.6k = 4.3403
+ * 
+ * By reading the USART2_BRR register, we can see that this is the value located in the USART_DIV
+ * 
+ * Therefore, the error is 0% 
+ */
+
 #include "embsysS20.h"
 #include <stdio.h>
 #include <errno.h>
@@ -18,7 +32,6 @@
 char fn_encryptText(char c_toEncrypt);
 char fn_decryptText(char c_toDecrypt);
 void fn_convertToCaps(char* pc_Convert);
-void setup_tim3();
 
 const char ac_CIPHER[CIPHER_SIZE] = {'T','E','N','N','E','S','S','E','E','T','E','C','H'};
 
@@ -54,9 +67,9 @@ int main(void)  {
   char c_charToSend = '\0';
 
   // initialize the hardware
-  clock_setup();
-  usart_setup(); 
-  setup_tim3();
+  fn_clock_setup();
+  fn_usart_setup(); 
+  fn_setup_tim2();
 
   gpio_mode_setup(LED2_GPIO_Port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, LED2_Pin);
   gpio_mode_setup(BUT1_GPIO_Port, GPIO_MODE_INPUT, GPIO_PUPD_NONE, BUT1_Pin);
@@ -91,13 +104,13 @@ int main(void)  {
     }
 
     //Toggle Led
-    if(timer_get_flag(TIM3,TIM_SR_CC1IF)){
-      timer_clear_flag(TIM3, TIM_SR_CC1IF);
+    if(timer_get_flag(TIM2,TIM_SR_CC1IF)){
+      timer_clear_flag(TIM2, TIM_SR_CC1IF);
 
       if(IS_B1_PRESSED)
-        timer_set_period(TIM3, 2500);
+        timer_set_period(TIM2, 2500); //4M / (200 * 2.5k) = 8 Hz, period - 0.125 s
       else
-        timer_set_period(TIM3, 10000);
+        timer_set_period(TIM2, 10000); //4M / (200 * 10k) = 2 Hz, period = 0.5s
         
       TOGGLE_LED;
     }
@@ -134,13 +147,4 @@ char fn_decryptText(char c_toDecrypt){
   u8_cipherDPosition = (u8_cipherDPosition == CIPHER_SIZE) ? 0 : u8_cipherDPosition;
   
   return c_toDecrypt;
-}
-
-void setup_tim3(){
-  rcc_periph_reset_pulse(RST_TIM3);
-	timer_set_prescaler(TIM3, 200);
-  //printf("%d\n", rcc_apb1_frequency);
-  timer_set_period(TIM3, 10000);
-	timer_enable_counter(TIM3);
-	timer_enable_irq(TIM3, TIM_DIER_CC1IE);
 }

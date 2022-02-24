@@ -1,0 +1,6 @@
+The .HEX file target_m3_14FEB2022.hex implements
+APPROXIMATELY the desired behavior for m3 design
+milestones.  
+
+Please note the the provided .HEX file communicates over
+the UART at 57.6k/8N1.  NO PARITY!!!!

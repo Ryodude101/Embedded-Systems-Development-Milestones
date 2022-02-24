@@ -1,4 +1,4 @@
-build/m1a.o: src/m1a.c \
+Build/m3.o: Source/m3.c Source/embsysS20.h \
  /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/rcc.h \
  /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/cm3/common.h \
  /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/memorymap.h \
@@ -11,7 +11,18 @@ build/m1a.o: src/m1a.c \
  /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/gpio_common_f24.h \
  /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/gpio_common_f234.h \
  /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/gpio_common_all.h \
- src/user_app.h
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/usart.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/l4/usart.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/usart_common_all.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/usart_common_v2.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/cm3/nvic.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/dispatch/nvic.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/l4/nvic.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/timer.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/l4/timer.h \
+ /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/timer_common_all.h \
+ Source/circularBuffer.h
+Source/embsysS20.h:
 /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/rcc.h:
 /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/cm3/common.h:
 /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/memorymap.h:
@@ -24,4 +35,14 @@ build/m1a.o: src/m1a.c \
 /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/gpio_common_f24.h:
 /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/gpio_common_f234.h:
 /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/gpio_common_all.h:
-src/user_app.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/usart.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/l4/usart.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/usart_common_all.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/usart_common_v2.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/cm3/nvic.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/dispatch/nvic.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/l4/nvic.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/timer.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/l4/timer.h:
+/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/libopencm3/stm32/common/timer_common_all.h:
+Source/circularBuffer.h:

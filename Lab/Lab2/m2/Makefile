@@ -51,8 +51,8 @@ ifdef CPATH
   GCC_PATH = /home/tyler/gcc-arm-none-eabi-10.3-2021.10/bin
 else
   # Your paths here
-  CM3_DIR = /home/lubuntu/Documents/libOpenCM3/libopencm3
-  GCC_PATH = /home/lubuntu/Documents/ARMToolchain/gcc-arm-none-eabi-10.3-2021.10/bin
+  CM3_DIR = /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3
+  GCC_PATH = /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/bin
 endif
 
 ######################################

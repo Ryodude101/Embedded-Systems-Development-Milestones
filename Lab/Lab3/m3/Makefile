@@ -1,5 +1,5 @@
-##########################################################################################################################
 # Makefile    J.W.Bruce (C) 2020, 2021
+##########################################################################################################################
 ##########################################################################################################################
 
 
@@ -27,7 +27,7 @@ endif
 ######################################
 all: $(TARGET)
 
-TARGET = m1b
+TARGET = m3
 
 ######################################
 # building variables
@@ -41,17 +41,26 @@ OPT = -Og
 # paths
 #######################################
 # Build path
-BUILD_DIR = build
+BUILD_DIR = Build
 
-# CM3 base path
-CM3_DIR = /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3
+# CM3 and GCC Paths
+
+# Do not modify these paths
+ifdef CPATH
+  CM3_DIR = /home/tyler/Documents/Github/libopencm3
+  GCC_PATH = /home/tyler/gcc-arm-none-eabi-10.3-2021.10/bin
+else
+  # Your paths here
+  CM3_DIR = /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3
+  GCC_PATH = /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi-10.3-2021.10/bin
+endif
 
 ######################################
 # source
 ######################################
 # C sources
 C_SOURCES =  \
-src/m1b.c \
+Source/m3.c \
 
 
 # ASM sources
@@ -63,6 +72,7 @@ ASM_SOURCES =  \
 PREFIX = arm-none-eabi-
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
+
 ifdef GCC_PATH
 CC = $(GCC_PATH)/$(PREFIX)gcc
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
@@ -130,7 +140,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = ld.stm32.basic
+LDSCRIPT = Dependencies/ld.stm32.basic
 
 # libraries
 LIBS = -lc -lm -lnosys -lopencm3_stm32l4
@@ -185,4 +195,5 @@ clean:
 -include $(wildcard $(BUILD_DIR)/*.d)
 
 # *** EOF ***
+
 

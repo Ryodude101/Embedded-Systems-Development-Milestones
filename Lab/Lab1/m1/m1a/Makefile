@@ -44,7 +44,7 @@ OPT = -Og
 BUILD_DIR = build
 
 # CM3 base path
-CM3_DIR = /home/lubuntu/Documents/libOpenCM3/libopencm3
+CM3_DIR = /home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3
 
 ######################################
 # source

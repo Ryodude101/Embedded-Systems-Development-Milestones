@@ -14,7 +14,7 @@
     #define LED2_Pin GPIO5  //Pin number for PA5, the LED2 pin, can be found in nucleo board 64 user manual
     #define LED2_GPIO_Port GPIOA  //PORTA address, can be found in libopencm3 docs
     #define BUT1_GPIO_Port GPIOC  //PORTC address, can be found in libopencm3 docs
-    #define BUT1_Pin GPIO13  //Pin number for PC2, the B1 pin, can be found in the nucleo board 64 user manual
+    #define BUT1_Pin GPIO13  //Pin number for PC13, the B1 pin, can be found in the nucleo board 64 user manual
 
     #define USART_CONSOLE USART2 //PA2 (tx) and PA3 (rx), STM32-L452RE Reference Manual
     #define USART_GPIO_Port GPIOA
@@ -29,7 +29,7 @@
     #define IS_B1_RELEASED (gpio_get(BUT1_GPIO_Port,BUT1_Pin))
     #define IS_B1_PRESSED ((IS_B1_RELEASED)^BUT1_Pin)
     
-    void clock_setup(void){
+    void fn_clock_setup(void){
         rcc_osc_on(RCC_HSI16);
 
         //16 MHz / 4 => 4 * 20 = 80 MHz / 2 = 40 MHz
@@ -37,14 +37,14 @@
 
         rcc_osc_on(RCC_PLL);
 
-        rcc_periph_clock_enable(RCC_TIM3);
+        rcc_periph_clock_enable(RCC_TIM2);
         rcc_periph_clock_enable(RCC_GPIOA);
 	    rcc_periph_clock_enable(RCC_GPIOC);
 	    rcc_periph_clock_enable(RCC_USART2);
 	    return;
     }
 
-    void usart_setup(void){
+    void fn_usart_setup(void){
         /* Setup GPIO pins for USART */
          gpio_mode_setup(USART_GPIO_Port, GPIO_MODE_AF, GPIO_PUPD_NONE, USART_GPIO_TXPin | USART_GPIO_RXPin);
         
@@ -61,5 +61,19 @@
 
          /* everything is setup, so turn UART on */  
          usart_enable(USART_CONSOLE);
+    }
+
+    void fn_setup_tim2(){
+        rcc_periph_reset_pulse(RST_TIM2);
+
+        //rcc_APB1 is 4 MHz in this case, this can be verified by running the below print statement
+        //printf("%d\n", rcc_apb1_frequency);
+
+        //4M / (200 * 10k) = 2 Hz, period = 0.5s
+        timer_set_prescaler(TIM2, 200);
+        timer_set_period(TIM2, 10000);
+
+        timer_enable_counter(TIM2);
+        timer_enable_irq(TIM2, TIM_DIER_CC1IE);
     }
 #endif
