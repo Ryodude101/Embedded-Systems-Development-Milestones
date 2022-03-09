@@ -1,0 +1,69 @@
+Problem 1E.6 Redux File D
+02.27.22
+Ryan Colon
+This is how I came up with my new algorithm for PE1.6
+
+First let's talk statistics:
+    Allowable input range (system clock frequency range):
+        min: 8 MHz (This is because minimum VCO Freq is 64 MHz)
+        max: 80 MHz (This is because maximum PLLCLK Freq is 80 MHz)
+
+    Worst Case Frequency Accuracy:
+        Occurs @ desired frequency of 8001 kHz
+        Actual Clock Frequency: 8250 kHz
+        error: 3.1121%
+
+    Average Frequency Accuracy Error:
+        0.6843%
+
+    Worst execution time:
+        occurs @ desired frequency of 80 MHz
+        This is because the loops in the algorithm loop the most times in this specific case.
+
+This algorithm is far from the fastest algorithm possible out there, however it WILL always get you the most accurate clock frequency.
+I came up with this algorithm by thinking about how the system clock actually get's calculated and in this case it is calculated by the equation:
+    
+                 SYSCLK = ((16e6 / PLLM) * PLLN) / PLLR   [derived from datasheet]
+
+And as we can see, we have 3 free variables: PLLM, PLLN, and PLLR, based upon a single input.
+I started doing some calculations by hand and came to a realization, we can determine the precedence of the free variables
+by observing the equation above and realizing the limits at each step.
+
+I first decided to let PLLN be the least precedent variable (most free variable) because it has the largest number of discrete states (78)
+Solving the system backwards for PLLN, we can see that PLLR is the first variable to interact with the SYSCLK input, making it the most precedent variable. 
+So we'll let those two things determine the upper limit for VCO (PLLSRC * PLLN / PLLM). 
+
+Why let it determine the upperlimit? Because we want the maximum value of PLLM possible. This is because PLLN is our free variable, and in the equation we notice:
+
+    VCO = (16000/PLLM) * PLLN
+
+by maximizing PLLM, we minimize the frequency change per step of PLLN (we get the maximum frequency resolution).
+
+So once VCO's upper limit has been determined, we solve for PLLM and PLLN simultaneously by determining the combinations of PLLM and PLLN that will get us a
+value of PLLN inside PLLN's valid range (8-86) with a maximal value of PLLM (this is a lot simpler than it sounds in code).
+
+Because we're solving it this way, we can determine that the worst case execution time will occur at the minimum values of PLLR and PLLM, which correspond to the
+highest system clock frequency. So then it is easy to figure that 80 MHz will be the worst case execution (minimum allowable frequency input, PLLR = 4, PLLM = 4).
+
+I determined the worst case frequency accuracy by implementing the algorithm in Matlab and measuring the error produced from every 1 kHz over the entire frequency
+range. The worst frequency accuracy case ONLY OCCURS ONCE and it is listed above. I also calculated the average error in Matlab as well.
+
+
+
+This is completely different from the way I was implementing the algorithm on the test. On the test I was obviously crunched for time, but I was also thinking
+too much on how to hard code the values. I didn't like the idea of a machine figuring out all the variables because if the machine get's it wrong on an
+edge case that I might not have considered, that could be disastrous.
+
+However, I eventually thought to myself why? Why would a machine do it worse than I would? The machine will only do what I tell it.
+So I went into Matlab and came up with this algorithm by really deeply thinking about how I'd been calculating the values by hand.
+I tested the algorithm in Matlab and studied various statistics about it (listed above) and realized that this was probably the best way I (let me repeat that, I)
+could come up with to calculate the values in order to minimize frequency error.
+
+I then tested ALL possible cases for this algorithm in Matlab and it worked without flaw. I shifted it over to the STM32, tested it, and ensure it worked.
+
+
+
+What I had discovered while making this algorithm was the relationship between PLLR, PLLM, and PLLN. And it's funny because I remember during the exam thinking
+why in the hell did they have all of these divisor variables, why weren't they just one variable? And I realized making this algorithm how they all interact 
+with eachother in such a way to create as diverse a choice for a system clock as possible, and that they are 100% necessary to allow the user such fine control
+and variety.

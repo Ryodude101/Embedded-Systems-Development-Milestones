@@ -1,0 +1,424 @@
+ARM GAS  Racolon42_c.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Racolon42_c.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.ttu_set_main_pll,"ax",%progbits
+  20              		.align	1
+  21              		.global	ttu_set_main_pll
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	ttu_set_main_pll:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Source/Racolon42_c.c"
+   1:Source/Racolon42_c.c **** /* Problem 1E.6 Redux File C
+   2:Source/Racolon42_c.c ****  * Ryan Colon
+   3:Source/Racolon42_c.c ****  * 02.27.22
+   4:Source/Racolon42_c.c ****  * This program is my best possible implementation of the ttu_set_main_pll function
+   5:Source/Racolon42_c.c ****  */
+   6:Source/Racolon42_c.c **** 
+   7:Source/Racolon42_c.c **** #ifndef STM32L4
+   8:Source/Racolon42_c.c ****   #define STM32L4
+   9:Source/Racolon42_c.c **** #endif
+  10:Source/Racolon42_c.c **** 
+  11:Source/Racolon42_c.c **** #include <math.h>
+  12:Source/Racolon42_c.c **** #include <libopencm3/stm32/rcc.h>
+  13:Source/Racolon42_c.c **** #include <libopencm3/stm32/gpio.h>
+  14:Source/Racolon42_c.c **** 
+  15:Source/Racolon42_c.c **** #define LED2_Pin GPIO5  //Pin number for PA5, the LED2 pin, can be found in nucleo board 64 user ma
+  16:Source/Racolon42_c.c **** #define LED2_GPIO_Port GPIOA  //PORTA address, can be found in libopencm3 docs
+  17:Source/Racolon42_c.c **** 
+  18:Source/Racolon42_c.c **** #define TOGGLE_LED gpio_toggle(LED2_GPIO_Port,LED2_Pin)
+  19:Source/Racolon42_c.c **** 
+  20:Source/Racolon42_c.c **** void ttu_set_main_pll( uint32_t u32_freqKhz){
+  30              		.loc 1 20 45 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 20 45 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+ARM GAS  Racolon42_c.s 			page 2
+
+
+  39              		.cfi_offset 14, -4
+  40 0002 82B0     		sub	sp, sp, #8
+  41              	.LCFI1:
+  42              		.cfi_def_cfa_offset 16
+  21:Source/Racolon42_c.c ****     /* My goal for this function is to be as accurate as possible to the input frequency. My design
+  22:Source/Racolon42_c.c ****      * How I interperet the values PLLR, PLLM, and PLLN. 
+  23:Source/Racolon42_c.c ****      * PLLR: This is a limiter to make sure the value from VCO is within the Sysclock's range
+  24:Source/Racolon42_c.c ****      * PLLM: I think of this variable as a resolution knob. The value of this will determine how mu
+  25:Source/Racolon42_c.c ****      * PLLN: This value has the most discrete steps (78), so use it as the "free variable" for this
+  26:Source/Racolon42_c.c ****      * The HSI16 frequency is 16 MHz. VCO allowable frequency range is 64-344 MHz. But sysclock ran
+  27:Source/Racolon42_c.c ****      * This means the input range for this function is 8-80 MHz
+  28:Source/Racolon42_c.c ****      */
+  29:Source/Racolon42_c.c **** 
+  30:Source/Racolon42_c.c ****     //The equation to calculate the system clock: SYSCLK = ((16e6 / PLLM) * PLLN) / PLLR   [derived
+  31:Source/Racolon42_c.c **** 
+  32:Source/Racolon42_c.c ****     uint32_t u32_R = 4; 
+  43              		.loc 1 32 5 is_stmt 1 view .LVU2
+  44              	.LVL1:
+  33:Source/Racolon42_c.c ****     uint32_t u32_M = 4; 
+  45              		.loc 1 33 5 view .LVU3
+  34:Source/Racolon42_c.c ****     uint32_t u32_N = 16;
+  46              		.loc 1 34 5 view .LVU4
+  35:Source/Racolon42_c.c **** 
+  36:Source/Racolon42_c.c ****     if(u32_freqKhz < 8000 || u32_freqKhz > 80000)
+  47              		.loc 1 36 5 view .LVU5
+  48              		.loc 1 36 27 is_stmt 0 view .LVU6
+  49 0004 A0F5FA51 		sub	r1, r0, #8000
+  50              		.loc 1 36 7 view .LVU7
+  51 0008 174B     		ldr	r3, .L13
+  52 000a 9942     		cmp	r1, r3
+  53 000c 0BD9     		bls	.L2
+  37:Source/Racolon42_c.c ****       asm("nop");
+  54              		.loc 1 37 7 is_stmt 1 view .LVU8
+  55              		.syntax unified
+  56              	@ 37 "Source/Racolon42_c.c" 1
+  57 000e 00BF     		nop
+  58              	@ 0 "" 2
+  34:Source/Racolon42_c.c ****     uint32_t u32_N = 16;
+  59              		.loc 1 34 14 is_stmt 0 view .LVU9
+  60              		.thumb
+  61              		.syntax unified
+  62 0010 1022     		movs	r2, #16
+  33:Source/Racolon42_c.c ****     uint32_t u32_N = 16;
+  63              		.loc 1 33 14 view .LVU10
+  64 0012 0421     		movs	r1, #4
+  32:Source/Racolon42_c.c ****     uint32_t u32_M = 4; 
+  65              		.loc 1 32 14 view .LVU11
+  66 0014 0846     		mov	r0, r1
+  67              	.LVL2:
+  68              	.L3:
+  38:Source/Racolon42_c.c ****     else{
+  39:Source/Racolon42_c.c ****       //Think about the above equation backwards, and lets use that to determine our parameter prec
+  40:Source/Racolon42_c.c ****       u32_R = 8;
+  41:Source/Racolon42_c.c ****       u32_M = 8;
+  42:Source/Racolon42_c.c **** 
+  43:Source/Racolon42_c.c ****       //Determine PLLR based on the max frequency of VCO
+  44:Source/Racolon42_c.c ****       uint32_t u32_vcoUpper = u32_freqKhz * u32_R;
+ARM GAS  Racolon42_c.s 			page 3
+
+
+  45:Source/Racolon42_c.c ****       while(u32_vcoUpper > 344000)
+  46:Source/Racolon42_c.c ****         u32_vcoUpper = u32_freqKhz * (--u32_R);
+  47:Source/Racolon42_c.c **** 
+  48:Source/Racolon42_c.c ****       //Determine N and M simultaneously, Higher values of M give values of N greater frequency res
+  49:Source/Racolon42_c.c ****       bool b_NTooLarge = true;
+  50:Source/Racolon42_c.c ****       while(b_NTooLarge){
+  51:Source/Racolon42_c.c ****         u32_N = 8;
+  52:Source/Racolon42_c.c **** 
+  53:Source/Racolon42_c.c ****         while((u32_N * (16000/u32_M)) < u32_vcoUpper)
+  54:Source/Racolon42_c.c ****           ++u32_N;
+  55:Source/Racolon42_c.c **** 
+  56:Source/Racolon42_c.c ****         if(u32_N > 86){
+  57:Source/Racolon42_c.c ****           b_NTooLarge = true;
+  58:Source/Racolon42_c.c ****           --u32_M;
+  59:Source/Racolon42_c.c ****         }
+  60:Source/Racolon42_c.c ****         else
+  61:Source/Racolon42_c.c ****           b_NTooLarge = false;
+  62:Source/Racolon42_c.c ****       }
+  63:Source/Racolon42_c.c ****     }
+  64:Source/Racolon42_c.c **** 
+  65:Source/Racolon42_c.c ****     //Set the clock and return
+  66:Source/Racolon42_c.c ****     rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, u32_M, u32_N, 7, 2, u32_R);
+  69              		.loc 1 66 5 is_stmt 1 view .LVU12
+  70 0016 0190     		str	r0, [sp, #4]
+  71 0018 0220     		movs	r0, #2
+  72              	.LVL3:
+  73              		.loc 1 66 5 is_stmt 0 view .LVU13
+  74 001a 0090     		str	r0, [sp]
+  75 001c 0723     		movs	r3, #7
+  76 001e FFF7FEFF 		bl	rcc_set_main_pll
+  77              	.LVL4:
+  67:Source/Racolon42_c.c ****     return;
+  78              		.loc 1 67 5 is_stmt 1 view .LVU14
+  68:Source/Racolon42_c.c **** }
+  79              		.loc 1 68 1 is_stmt 0 view .LVU15
+  80 0022 02B0     		add	sp, sp, #8
+  81              	.LCFI2:
+  82              		.cfi_remember_state
+  83              		.cfi_def_cfa_offset 8
+  84              		@ sp needed
+  85 0024 10BD     		pop	{r4, pc}
+  86              	.LVL5:
+  87              	.L2:
+  88              	.LCFI3:
+  89              		.cfi_restore_state
+  90              		.loc 1 68 1 view .LVU16
+  91 0026 0246     		mov	r2, r0
+  92              	.LBB2:
+  40:Source/Racolon42_c.c ****       u32_M = 8;
+  93              		.loc 1 40 7 is_stmt 1 view .LVU17
+  94              	.LVL6:
+  41:Source/Racolon42_c.c **** 
+  95              		.loc 1 41 7 view .LVU18
+  44:Source/Racolon42_c.c ****       while(u32_vcoUpper > 344000)
+  96              		.loc 1 44 7 view .LVU19
+  44:Source/Racolon42_c.c ****       while(u32_vcoUpper > 344000)
+  97              		.loc 1 44 16 is_stmt 0 view .LVU20
+ARM GAS  Racolon42_c.s 			page 4
+
+
+  98 0028 4FEAC00C 		lsl	ip, r0, #3
+  99              	.LVL7:
+  45:Source/Racolon42_c.c ****         u32_vcoUpper = u32_freqKhz * (--u32_R);
+ 100              		.loc 1 45 7 is_stmt 1 view .LVU21
+  40:Source/Racolon42_c.c ****       u32_M = 8;
+ 101              		.loc 1 40 13 is_stmt 0 view .LVU22
+ 102 002c 0820     		movs	r0, #8
+ 103              	.LVL8:
+  45:Source/Racolon42_c.c ****         u32_vcoUpper = u32_freqKhz * (--u32_R);
+ 104              		.loc 1 45 12 view .LVU23
+ 105 002e 02E0     		b	.L4
+ 106              	.LVL9:
+ 107              	.L5:
+  46:Source/Racolon42_c.c **** 
+ 108              		.loc 1 46 9 is_stmt 1 view .LVU24
+  46:Source/Racolon42_c.c **** 
+ 109              		.loc 1 46 22 is_stmt 0 view .LVU25
+ 110 0030 0138     		subs	r0, r0, #1
+ 111              	.LVL10:
+  46:Source/Racolon42_c.c **** 
+ 112              		.loc 1 46 22 view .LVU26
+ 113 0032 00FB02FC 		mul	ip, r0, r2
+ 114              	.LVL11:
+ 115              	.L4:
+  45:Source/Racolon42_c.c ****         u32_vcoUpper = u32_freqKhz * (--u32_R);
+ 116              		.loc 1 45 12 is_stmt 1 view .LVU27
+ 117 0036 0D4B     		ldr	r3, .L13+4
+ 118 0038 9C45     		cmp	ip, r3
+ 119 003a F9D8     		bhi	.L5
+  49:Source/Racolon42_c.c ****       while(b_NTooLarge){
+ 120              		.loc 1 49 11 is_stmt 0 view .LVU28
+ 121 003c 0124     		movs	r4, #1
+ 122              	.LBE2:
+  34:Source/Racolon42_c.c **** 
+ 123              		.loc 1 34 14 view .LVU29
+ 124 003e 1022     		movs	r2, #16
+ 125              	.LVL12:
+ 126              	.LBB3:
+  41:Source/Racolon42_c.c **** 
+ 127              		.loc 1 41 13 view .LVU30
+ 128 0040 0821     		movs	r1, #8
+ 129              	.LVL13:
+  41:Source/Racolon42_c.c **** 
+ 130              		.loc 1 41 13 view .LVU31
+ 131 0042 0BE0     		b	.L6
+ 132              	.LVL14:
+ 133              	.L7:
+  54:Source/Racolon42_c.c **** 
+ 134              		.loc 1 54 11 is_stmt 1 view .LVU32
+ 135 0044 0132     		adds	r2, r2, #1
+ 136              	.LVL15:
+ 137              	.L9:
+  53:Source/Racolon42_c.c ****           ++u32_N;
+ 138              		.loc 1 53 14 view .LVU33
+  53:Source/Racolon42_c.c ****           ++u32_N;
+ 139              		.loc 1 53 30 is_stmt 0 view .LVU34
+ 140 0046 4FF47A53 		mov	r3, #16000
+ARM GAS  Racolon42_c.s 			page 5
+
+
+ 141 004a B3FBF1F3 		udiv	r3, r3, r1
+  53:Source/Racolon42_c.c ****           ++u32_N;
+ 142              		.loc 1 53 22 view .LVU35
+ 143 004e 02FB03F3 		mul	r3, r2, r3
+  53:Source/Racolon42_c.c ****           ++u32_N;
+ 144              		.loc 1 53 14 view .LVU36
+ 145 0052 6345     		cmp	r3, ip
+ 146 0054 F6D3     		bcc	.L7
+  56:Source/Racolon42_c.c ****           b_NTooLarge = true;
+ 147              		.loc 1 56 9 is_stmt 1 view .LVU37
+  56:Source/Racolon42_c.c ****           b_NTooLarge = true;
+ 148              		.loc 1 56 11 is_stmt 0 view .LVU38
+ 149 0056 562A     		cmp	r2, #86
+ 150 0058 04D9     		bls	.L10
+  57:Source/Racolon42_c.c ****           --u32_M;
+ 151              		.loc 1 57 11 is_stmt 1 view .LVU39
+ 152              	.LVL16:
+  58:Source/Racolon42_c.c ****         }
+ 153              		.loc 1 58 11 view .LVU40
+ 154 005a 0139     		subs	r1, r1, #1
+ 155              	.LVL17:
+ 156              	.L6:
+  50:Source/Racolon42_c.c ****         u32_N = 8;
+ 157              		.loc 1 50 12 view .LVU41
+ 158 005c 002C     		cmp	r4, #0
+ 159 005e DAD0     		beq	.L3
+  51:Source/Racolon42_c.c **** 
+ 160              		.loc 1 51 15 is_stmt 0 view .LVU42
+ 161 0060 0822     		movs	r2, #8
+ 162              	.LVL18:
+  51:Source/Racolon42_c.c **** 
+ 163              		.loc 1 51 15 view .LVU43
+ 164 0062 F0E7     		b	.L9
+ 165              	.LVL19:
+ 166              	.L10:
+  61:Source/Racolon42_c.c ****       }
+ 167              		.loc 1 61 23 view .LVU44
+ 168 0064 0024     		movs	r4, #0
+ 169              	.LVL20:
+  61:Source/Racolon42_c.c ****       }
+ 170              		.loc 1 61 23 view .LVU45
+ 171 0066 F9E7     		b	.L6
+ 172              	.L14:
+ 173              		.align	2
+ 174              	.L13:
+ 175 0068 40190100 		.word	72000
+ 176 006c C03F0500 		.word	344000
+ 177              	.LBE3:
+ 178              		.cfi_endproc
+ 179              	.LFE0:
+ 181              		.section	.text.main,"ax",%progbits
+ 182              		.align	1
+ 183              		.global	main
+ 184              		.syntax unified
+ 185              		.thumb
+ 186              		.thumb_func
+ 188              	main:
+ARM GAS  Racolon42_c.s 			page 6
+
+
+ 189              	.LFB1:
+  69:Source/Racolon42_c.c **** 
+  70:Source/Racolon42_c.c **** //This implements the above algorithm to set the clock freq. The only thing I've added is an LED he
+  71:Source/Racolon42_c.c **** int main(void)  {
+ 190              		.loc 1 71 16 is_stmt 1 view -0
+ 191              		.cfi_startproc
+ 192              		@ args = 0, pretend = 0, frame = 0
+ 193              		@ frame_needed = 0, uses_anonymous_args = 0
+ 194 0000 08B5     		push	{r3, lr}
+ 195              	.LCFI4:
+ 196              		.cfi_def_cfa_offset 8
+ 197              		.cfi_offset 3, -8
+ 198              		.cfi_offset 14, -4
+  72:Source/Racolon42_c.c ****   ttu_set_main_pll(10000);
+ 199              		.loc 1 72 3 view .LVU47
+ 200 0002 42F21070 		movw	r0, #10000
+ 201 0006 FFF7FEFF 		bl	ttu_set_main_pll
+ 202              	.LVL21:
+  73:Source/Racolon42_c.c **** 
+  74:Source/Racolon42_c.c ****   rcc_periph_clock_enable(RCC_GPIOA);
+ 203              		.loc 1 74 3 view .LVU48
+ 204 000a 4FF41860 		mov	r0, #2432
+ 205 000e FFF7FEFF 		bl	rcc_periph_clock_enable
+ 206              	.LVL22:
+  75:Source/Racolon42_c.c **** 
+  76:Source/Racolon42_c.c ****   gpio_mode_setup(LED2_GPIO_Port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, LED2_Pin);
+ 207              		.loc 1 76 3 view .LVU49
+ 208 0012 2023     		movs	r3, #32
+ 209 0014 0122     		movs	r2, #1
+ 210 0016 1146     		mov	r1, r2
+ 211 0018 4FF09040 		mov	r0, #1207959552
+ 212 001c FFF7FEFF 		bl	gpio_mode_setup
+ 213              	.LVL23:
+ 214 0020 09E0     		b	.L18
+ 215              	.LVL24:
+ 216              	.L17:
+ 217              	.LBB4:
+  77:Source/Racolon42_c.c **** 
+  78:Source/Racolon42_c.c ****   while(true){
+  79:Source/Racolon42_c.c ****     for(uint32_t u32_i = 0; u32_i < 500000; u32_i++)
+  80:Source/Racolon42_c.c ****       asm("nop");
+ 218              		.loc 1 80 7 discriminator 3 view .LVU50
+ 219              		.syntax unified
+ 220              	@ 80 "Source/Racolon42_c.c" 1
+ 221 0022 00BF     		nop
+ 222              	@ 0 "" 2
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 223              		.loc 1 79 45 discriminator 3 view .LVU51
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 224              		.loc 1 79 50 is_stmt 0 discriminator 3 view .LVU52
+ 225              		.thumb
+ 226              		.syntax unified
+ 227 0024 0133     		adds	r3, r3, #1
+ 228              	.LVL25:
+ 229              	.L16:
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 230              		.loc 1 79 29 is_stmt 1 discriminator 1 view .LVU53
+ARM GAS  Racolon42_c.s 			page 7
+
+
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 231              		.loc 1 79 5 is_stmt 0 discriminator 1 view .LVU54
+ 232 0026 054A     		ldr	r2, .L20
+ 233 0028 9342     		cmp	r3, r2
+ 234 002a FAD9     		bls	.L17
+ 235              	.LBE4:
+  81:Source/Racolon42_c.c **** 
+  82:Source/Racolon42_c.c ****     TOGGLE_LED;
+ 236              		.loc 1 82 5 is_stmt 1 view .LVU55
+ 237 002c 2021     		movs	r1, #32
+ 238 002e 4FF09040 		mov	r0, #1207959552
+ 239 0032 FFF7FEFF 		bl	gpio_toggle
+ 240              	.LVL26:
+  78:Source/Racolon42_c.c ****     for(uint32_t u32_i = 0; u32_i < 500000; u32_i++)
+ 241              		.loc 1 78 8 view .LVU56
+ 242              	.L18:
+  78:Source/Racolon42_c.c ****     for(uint32_t u32_i = 0; u32_i < 500000; u32_i++)
+ 243              		.loc 1 78 3 view .LVU57
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 244              		.loc 1 79 5 view .LVU58
+ 245              	.LBB5:
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 246              		.loc 1 79 9 view .LVU59
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 247              		.loc 1 79 18 is_stmt 0 view .LVU60
+ 248 0036 0023     		movs	r3, #0
+  79:Source/Racolon42_c.c ****       asm("nop");
+ 249              		.loc 1 79 5 view .LVU61
+ 250 0038 F5E7     		b	.L16
+ 251              	.L21:
+ 252 003a 00BF     		.align	2
+ 253              	.L20:
+ 254 003c 1FA10700 		.word	499999
+ 255              	.LBE5:
+ 256              		.cfi_endproc
+ 257              	.LFE1:
+ 259              		.text
+ 260              	.Letext0:
+ 261              		.file 2 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi
+ 262              		.file 3 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/ARM/gcc-arm-none-eabi
+ 263              		.file 4 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/li
+ 264              		.file 5 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/li
+ 265              		.file 6 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/li
+ 266              		.file 7 "/home/ryan/Documents/Gitlab/embedded-systems-development-milestones/libopencm3/include/li
+ARM GAS  Racolon42_c.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Racolon42_c.c
+       Racolon42_c.s:20     .text.ttu_set_main_pll:0000000000000000 $t
+       Racolon42_c.s:26     .text.ttu_set_main_pll:0000000000000000 ttu_set_main_pll
+       Racolon42_c.s:175    .text.ttu_set_main_pll:0000000000000068 $d
+       Racolon42_c.s:182    .text.main:0000000000000000 $t
+       Racolon42_c.s:188    .text.main:0000000000000000 main
+       Racolon42_c.s:254    .text.main:000000000000003c $d
+
+UNDEFINED SYMBOLS
+rcc_set_main_pll
+rcc_periph_clock_enable
+gpio_mode_setup
+gpio_toggle
